@@ -75,8 +75,15 @@ export function useVoting(userId: string | undefined, month: string) {
           votes: newVotes,
           status: "draft",
         };
-        
-        await supabase.from("votes").upsert(payload, { onConflict: "user_id,month" });
+        console.log("Saving draft for:", userId, month, newMess, newYear);
+
+        const { data, error } = await supabase
+  .from("votes")
+  .upsert(payload, { onConflict: "user_id,month" });
+
+if (error) {
+  console.error("Draft save failed:", error);
+};
         setSaving(false);
       }, 300);
     },
@@ -97,23 +104,32 @@ export function useVoting(userId: string | undefined, month: string) {
   const submitVotes = useCallback(async () => {
     if (!userId || Object.keys(votes).length < TOTAL_VOTES) return false;
   
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("votes")
-      .update({
-        status: "submitted",
-        votes: votes as any,
-      })
-      .eq("user_id", userId)
-      .eq("month", month);
+      .upsert(
+        {
+          user_id: userId,
+          month,
+          mess,
+          year,
+          votes: votes as unknown as import("@/integrations/supabase/types").Json,
+          status: "submitted",
+        },
+        { onConflict: "user_id,month" }
+      )
+      .select();
   
     if (error) {
       console.error("Submit failed:", error);
       return false;
     }
   
+    await supabase.rpc("increment_vote_count", { uid: userId });
+  
     setStatus("submitted");
     return true;
-  }, [userId, votes, month]);
+  }, [userId, votes, mess, year, month]);
+  
   
   
   
