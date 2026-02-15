@@ -116,14 +116,33 @@ const [menuB, setMenuB] = useState<any>(null);
       <div className="min-h-screen">
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[60vh] p-6 text-center animate-fade-in">
-          <div className="glass-card p-8 max-w-sm">
-            <h2 className="text-xl font-display font-bold text-primary mb-2">Already Voted ✓</h2>
-            <p className="text-muted-foreground text-sm">
-              You have already voted for {settings?.current_month}. Thank you!
+          <div className="glass-card p-8 max-w-md space-y-4">
+            
+            <h2 className="text-2xl font-display font-bold text-primary">
+              Already Voted ✓
+            </h2>
+  
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Your vote for{" "}
+              <span className="text-foreground font-medium">
+                {settings?.current_month}
+              </span>{" "}
+              has been successfully recorded.
+              <br />
+              Thank you for contributing to this month’s mess decision.
             </p>
+  
+            <div className="pt-4 border-t border-border/30 text-center space-y-1">
+              <p className="text-xs text-muted-foreground">Developed By</p>
+              <p className="text-sm font-display font-semibold text-primary">
+                Ranadip Chakraborty
+              </p>
+              <p className="text-xs text-muted-foreground">Mess Convener</p>
+            </div>
+  
             <button
               onClick={() => navigate("/home")}
-              className="mt-4 px-4 py-2 bg-muted text-foreground rounded-lg text-sm font-display"
+              className="mt-4 px-6 py-2 bg-muted text-foreground rounded-lg text-sm font-display hover:opacity-90 transition-opacity"
             >
               Back to Home
             </button>
@@ -132,6 +151,7 @@ const [menuB, setMenuB] = useState<any>(null);
       </div>
     );
   }
+  
 
   return (
     <div className="min-h-screen pb-24">

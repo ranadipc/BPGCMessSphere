@@ -56,18 +56,36 @@ export default function Home() {
       <div className="min-h-screen">
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[60vh] p-6 text-center animate-fade-in">
-          <div className="glass-card p-8 max-w-sm">
-            <h2 className="text-xl font-display font-bold text-primary mb-2">
+          <div className="glass-card p-8 max-w-md space-y-4">
+  
+            <h2 className="text-2xl font-display font-bold text-primary">
               Already Voted ✓
             </h2>
-            <p className="text-muted-foreground text-sm">
-              You have already voted for <span className="text-foreground font-medium">{settings.current_month}</span>. Thank you for participating.
+  
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Your vote for{" "}
+              <span className="text-foreground font-medium">
+                {settings.current_month}
+              </span>{" "}
+              has been recorded successfully.
+              <br />
+              Thank you for participating.
             </p>
+  
+            <div className="pt-4 border-t border-border/30 text-center space-y-1">
+              <p className="text-xs text-muted-foreground">Developed By</p>
+              <p className="text-sm font-display font-semibold text-primary">
+                Ranadip Chakraborty
+              </p>
+              <p className="text-xs text-muted-foreground">Mess Convener</p>
+            </div>
+  
           </div>
         </div>
       </div>
     );
   }
+  
 
   const canProceed = selectedMess && selectedYear;
 
