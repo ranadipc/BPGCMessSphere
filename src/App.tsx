@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import Voting from "./pages/Voting";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Stats from "./pages/Stats";
+
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
+  
 
   if (!user) return <Navigate to="/" replace />;
   return <>{children}</>;
@@ -52,7 +55,8 @@ const App = () => (
           <Route path="/" element={<AuthRedirect><Landing /></AuthRedirect>} />
           <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/voting" element={<ProtectedRoute><Voting /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/admin20231011" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+          <Route path="/stats20231011" element={<ProtectedRoute><Stats /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

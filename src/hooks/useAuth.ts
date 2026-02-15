@@ -10,37 +10,59 @@ export function useAuth() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        const currentUser = session?.user ?? null;
-
-        if (currentUser && !currentUser.email?.endsWith(ALLOWED_DOMAIN)) {
-          setError(`Only ${ALLOWED_DOMAIN} emails are allowed.`);
-          await supabase.auth.signOut();
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-
-        setError(null);
-        setUser(currentUser);
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const currentUser = session?.user ?? null;
+    let mounted = true;
+  
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+      const currentUser = data.session?.user ?? null;
+  
+      if (!mounted) return;
+  
       if (currentUser && !currentUser.email?.endsWith(ALLOWED_DOMAIN)) {
-        supabase.auth.signOut();
+        await supabase.auth.signOut();
         setUser(null);
+        setError(`Only ${ALLOWED_DOMAIN} emails are allowed.`);
       } else {
         setUser(currentUser);
+        setError(null);
+  
+        if (currentUser) {
+          await supabase.from("users").upsert({
+            id: currentUser.id,
+            email: currentUser.email,
+          });
+          
+        }
       }
+  
       setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    };
+  
+    init();
+  
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const currentUser = session?.user ?? null;
+  
+        if (!mounted) return;
+  
+        if (currentUser && !currentUser.email?.endsWith(ALLOWED_DOMAIN)) {
+          await supabase.auth.signOut();
+          setUser(null);
+          setError(`Only ${ALLOWED_DOMAIN} emails are allowed.`);
+        } else {
+          setUser(currentUser);
+          setError(null);
+        }
+      }
+    );
+  
+    return () => {
+      mounted = false;
+      listener.subscription.unsubscribe();
+    };
   }, []);
+  
 
   const signInWithGoogle = async () => {
     setError(null);

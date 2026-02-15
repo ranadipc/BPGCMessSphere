@@ -3,22 +3,60 @@ import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
 interface Props {
-  meal: Meal;
+  meal: string;
   voteKey: string;
-  currentChoice: Choice | undefined;
+  currentChoice?: Choice;
+  menuAItems: string[];
+  menuBItems: string[];
   onChoose: (choice: Choice) => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
-export default function MealSection({ meal, currentChoice, onChoose, disabled }: Props) {
+
+export default function MealSection(
+  { meal, voteKey, currentChoice, menuAItems, menuBItems, onChoose, disabled }: Props
+)
+ {
   return (
     <div className="glass-card p-4 space-y-3">
       <h4 className="font-display font-semibold text-foreground text-sm">
         {MEAL_LABELS[meal]}
       </h4>
+  
+      {/* MENU CONTENT */}
+      <div className="grid grid-cols-2 gap-3 text-sm">
+        <div className="bg-muted/30 p-3 rounded-lg space-y-1">
+          <p className="font-semibold text-primary text-xs">Menu A</p>
+          {menuAItems?.length > 0 ? (
+            menuAItems.map((item) => (
+              <p key={item} className="text-muted-foreground">
+                {item}
+              </p>
+            ))
+          ) : (
+            <p className="text-muted-foreground text-xs">No items</p>
+          )}
+        </div>
+  
+        <div className="bg-muted/30 p-3 rounded-lg space-y-1">
+          <p className="font-semibold text-accent text-xs">Menu B</p>
+          {menuBItems?.length > 0 ? (
+            menuBItems.map((item) => (
+              <p key={item} className="text-muted-foreground">
+                {item}
+              </p>
+            ))
+          ) : (
+            <p className="text-muted-foreground text-xs">No items</p>
+          )}
+        </div>
+      </div>
+  
+      {/* VOTE BUTTONS */}
       <div className="flex gap-2">
         {(["A", "B"] as Choice[]).map((choice) => {
           const isSelected = currentChoice === choice;
+  
           return (
             <button
               key={choice}
@@ -35,11 +73,12 @@ export default function MealSection({ meal, currentChoice, onChoose, disabled }:
               )}
             >
               {isSelected && <Check className="w-4 h-4" />}
-              Menu {choice}
+              Choose {choice}
             </button>
           );
         })}
       </div>
     </div>
   );
+  
 }

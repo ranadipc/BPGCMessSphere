@@ -9,6 +9,9 @@ import MenuComparison from "@/components/MenuComparison";
 import VoteButton from "@/components/VoteButton";
 import SubmitModal from "@/components/SubmitModal";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
 
 export default function Voting() {
   const { user } = useAuth();
@@ -19,14 +22,54 @@ export default function Voting() {
 
   const {
     votes, status, loading, saving,
-    setVote, submitVotes, mess, year, saveDraft,
+    setVote, submitVotes,
+    mess, year,
+    setMess, setYear,
+    saveDraft,
   } = useVoting(user?.id, settings?.current_month ?? "");
+  
 
   const activeMess = stateMess || mess;
   const activeYear = stateYear || year;
 
+  useEffect(() => {
+    if (activeMess && activeYear) {
+      setMess(activeMess);
+      setYear(activeYear);
+    }
+  }, [activeMess, activeYear]);
+  
+
   const [selectedDay, setSelectedDay] = useState<Day>("MON");
+  const [menuA, setMenuA] = useState<any>(null);
+const [menuB, setMenuB] = useState<any>(null);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (!settings?.current_month) return;
+  
+    const fetchMenus = async () => {
+      const { data, error } = await supabase
+        .from("menus")
+        .select("*")
+        .eq("month", settings.current_month)
+        .eq("status", "approved");
+  
+      if (error) {
+        console.error(error);
+        return;
+      }
+  
+      const a = data?.find((m) => m.type === "A");
+      const b = data?.find((m) => m.type === "B");
+  
+      setMenuA(a?.data || null);
+      setMenuB(b?.data || null);
+    };
+  
+    fetchMenus();
+  }, [settings?.current_month]);
+  
 
   if (!activeMess || !activeYear) {
     navigate("/home");
@@ -112,14 +155,16 @@ export default function Voting() {
         </div>
 
         <MenuComparison
-          day={selectedDay}
-          votes={votes}
-          onVote={(key, choice) => {
-            setVote(key, choice);
-            saveDraft({ ...votes, [key]: choice }, activeMess, activeYear);
-          }}
-          disabled={status === "submitted"}
-        />
+  day={selectedDay}
+  menuA={menuA}
+  menuB={menuB}
+  votes={votes}
+  onVote={(key, choice) => {
+    setVote(key, choice);
+  }}
+  disabled={status === "submitted"}
+/>
+
 
         <div className="flex gap-2">
           <button

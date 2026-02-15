@@ -62,7 +62,7 @@ export function useVoting(userId: string | undefined, month: string) {
 
   const saveDraft = useCallback(
     (newVotes: VoteMap, newMess: string, newYear: string) => {
-      if (!userId || !month || !newMess || !newYear) return;
+      if (!userId || !month) return;
       setSaving(true);
 
       if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -70,11 +70,12 @@ export function useVoting(userId: string | undefined, month: string) {
         const payload = {
           user_id: userId,
           month,
-          mess: newMess,
-          year: newYear,
-          votes: newVotes as unknown as import("@/integrations/supabase/types").Json,
+          mess: mess || newMess || "Unknown",
+          year: year || newYear || "Unknown",
+          votes: newVotes,
           status: "draft",
         };
+        
         await supabase.from("votes").upsert(payload, { onConflict: "user_id,month" });
         setSaving(false);
       }, 300);
@@ -95,20 +96,30 @@ export function useVoting(userId: string | undefined, month: string) {
 
   const submitVotes = useCallback(async () => {
     if (!userId || Object.keys(votes).length < TOTAL_VOTES) return false;
+  
     const { error } = await supabase
       .from("votes")
       .update({
         status: "submitted",
-        votes: votes as unknown as import("@/integrations/supabase/types").Json,
+        votes: votes as any,
       })
       .eq("user_id", userId)
       .eq("month", month);
-    if (!error) {
-      setStatus("submitted");
-      return true;
+  
+    if (error) {
+      console.error("Submit failed:", error);
+      return false;
     }
-    return false;
+  
+    setStatus("submitted");
+    return true;
   }, [userId, votes, month]);
+  
+  
+  
+  
+  
+  
 
   return {
     votes, status, mess, year, loading, saving,
