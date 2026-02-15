@@ -10,6 +10,8 @@ const YEAR_OPTIONS = ["First Year", "Second Year", "Third Year", "Fourth Year", 
 
 export default function Home() {
   const { user } = useAuth();
+  
+
   const { settings, loading: settingsLoading } = useSettings();
   const { status, mess, year, setMess, setYear, loading: voteLoading } = useVoting(
     user?.id,
@@ -18,7 +20,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [selectedMess, setSelectedMess] = useState(mess);
   const [selectedYear, setSelectedYear] = useState(year);
-
+  const [agreed, setAgreed] = useState(false);
   // Sync loaded values
   if (mess && !selectedMess) setSelectedMess(mess);
   if (year && !selectedYear) setSelectedYear(year);
@@ -87,9 +89,12 @@ export default function Home() {
   }
   
 
-  const canProceed = selectedMess && selectedYear;
+  const canProceed = selectedMess && selectedYear && agreed;
+
 
   return (
+
+    
     <div className="min-h-screen">
       <Navbar />
       <div className="container max-w-md mx-auto p-6 space-y-6 animate-fade-in">
@@ -99,7 +104,7 @@ export default function Home() {
           </h2>
           <p className="text-sm text-muted-foreground">Choose your mess and year to begin voting</p>
         </div>
-
+    
         <div className="space-y-4">
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Select Mess</label>
@@ -135,6 +140,7 @@ export default function Home() {
                 >
                   {y}
                 </button>
+                
               ))}
             </div>
           </div>
@@ -147,6 +153,29 @@ export default function Home() {
             </p>
           </div>
         )}
+        <div className="glass-card p-4 space-y-3 text-sm leading-relaxed">
+  <p className="text-muted-foreground">
+    While choosing the menu options, please keep in mind the <b>nutritional
+    value and health aspects of the meals</b>.
+  </p>
+
+  <p className="text-muted-foreground">
+    The <b>Mess Committee</b> is the final authority regarding all decisions
+    related to the mess menu. Its decisions are final and binding.
+  </p>
+
+  <div className="flex items-center gap-2 pt-2">
+    <input
+      type="checkbox"
+      checked={agreed}
+      onChange={(e) => setAgreed(e.target.checked)}
+      className="w-4 h-4 accent-primary"
+    />
+    <label className="text-foreground font-medium cursor-pointer">
+      I have read and agree to the above terms.
+    </label>
+  </div>
+</div>
 
         <button
           onClick={() => {
