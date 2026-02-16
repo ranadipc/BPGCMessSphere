@@ -11,7 +11,7 @@ export default function Landing() {
           <div className="flex items-center justify-center gap-2">
             <Zap className="w-8 h-8 text-primary" />
             <h1 className="text-3xl sm:text-4xl font-display font-bold text-primary neon-text">
-              BPGCMenuSphere
+              BPGCMessSphere
             </h1>
           </div>
           <p className="text-muted-foreground text-sm leading-relaxed max-w-xs mx-auto">

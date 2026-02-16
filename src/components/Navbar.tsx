@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 glass-card border-b border-border/30 px-4 py-3">
       <div className="container mx-auto flex items-center justify-between">
         <h1 className="text-xl font-display font-bold text-primary neon-text tracking-tight">
-          BPGCMenuSphere
+          BPGCMessSphere
         </h1>
         {user && (
           <div className="flex items-center gap-3">
