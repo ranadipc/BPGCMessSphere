@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import { ChevronRight, Clock } from "lucide-react";
 
 const MESS_OPTIONS = ["A", "C", "D"];
-const YEAR_OPTIONS = ["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year", "Faculty"];
+const YEAR_OPTIONS = ["First Year", "Second Year", "Third Year", "Fourth Year", "Fifth Year+", "M.E.", "PhD", "Faculty/Staff"];
 
 export default function Home() {
   const { user } = useAuth();
