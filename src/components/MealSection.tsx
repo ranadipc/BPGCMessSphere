@@ -17,9 +17,9 @@ export default function MealSection(
 )
  {
   const controls: { value: VoteValue; detail: string; icon: typeof Check }[] = [
-    { value: 1, detail: "+1 Points", icon: Check },
+    { value: 1, detail: "+1 Point", icon: Check },
     { value: 0, detail: "Neutral", icon: Circle },
-    { value: -1, detail: "-1 Points", icon: X },
+    { value: -1, detail: "-1 Point", icon: X },
   ];
 
   const vote = currentVote ?? { A: 0, B: 0 };
