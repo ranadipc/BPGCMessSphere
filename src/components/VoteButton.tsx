@@ -4,16 +4,17 @@ import { Send } from "lucide-react";
 
 interface Props {
   voteCount: number;
+  missingCount: number;
   onSubmit: () => void;
   disabled: boolean;
 }
 
-export default function VoteButton({ voteCount, onSubmit, disabled }: Props) {
+export default function VoteButton({ voteCount, missingCount, onSubmit, disabled }: Props) {
   const ready = voteCount >= TOTAL_VOTES;
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">Progress</span>
+        <span className="text-muted-foreground">Meals with at least one tick</span>
         <span className="font-display font-semibold text-primary">
           {voteCount}/{TOTAL_VOTES}
         </span>
@@ -24,6 +25,11 @@ export default function VoteButton({ voteCount, onSubmit, disabled }: Props) {
           style={{ width: `${(voteCount / TOTAL_VOTES) * 100}%` }}
         />
       </div>
+      {missingCount > 0 && (
+        <p className="text-xs text-muted-foreground">
+          {missingCount} meal{missingCount === 1 ? "" : "s"} still need at least one positive selection.
+        </p>
+      )}
       <button
         onClick={onSubmit}
         disabled={!ready || disabled}

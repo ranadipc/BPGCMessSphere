@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { VoteMap, VoteRow, Settings } from "@/types/voting";
+import type { Choice, Settings, VoteMap, VoteRow, VoteValue } from "@/types/voting";
 import { TOTAL_VOTES } from "@/types/voting";
+import { countCompletedMeals, getMissingPositiveMeals, normalizeVoteMap, serializeVoteMap, updateMealVote } from "@/lib/voteUtils";
 
 export function useSettings() {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -48,7 +49,7 @@ export function useVoting(userId: string | undefined, month: string) {
       .then(({ data }) => {
         if (data) {
           const row = data as unknown as VoteRow;
-          setVotes(row.votes as VoteMap);
+          setVotes(normalizeVoteMap(row.votes as import("@/integrations/supabase/types").Json));
           setStatus(row.status);
           setMess(row.mess);
           setYear(row.year);
@@ -72,7 +73,7 @@ export function useVoting(userId: string | undefined, month: string) {
           month,
           mess: mess || newMess || "Unknown",
           year: year || newYear || "Unknown",
-          votes: newVotes,
+          votes: serializeVoteMap(newVotes),
           status: "draft",
         };
         console.log("Saving draft for:", userId, month, newMess, newYear);
@@ -91,9 +92,9 @@ if (error) {
   );
 
   const setVote = useCallback(
-    (key: string, choice: "A" | "B") => {
+    (key: string, choice: Choice, value: VoteValue) => {
       if (status === "submitted") return;
-      const updated = { ...votes, [key]: choice };
+      const updated = updateMealVote(votes, key, choice, value);
       setVotes(updated);
       if (status === "none") setStatus("draft");
       saveDraft(updated, mess, year);
@@ -102,7 +103,9 @@ if (error) {
   );
 
   const submitVotes = useCallback(async () => {
-    if (!userId || Object.keys(votes).length < TOTAL_VOTES) return false;
+    if (!userId || countCompletedMeals(votes) < TOTAL_VOTES) return false;
+
+    if (getMissingPositiveMeals(votes).length > 0) return false;
   
     const { data, error } = await supabase
       .from("votes")
@@ -112,7 +115,7 @@ if (error) {
           month,
           mess,
           year,
-          votes: votes as unknown as import("@/integrations/supabase/types").Json,
+          votes: serializeVoteMap(votes),
           status: "submitted",
         },
         { onConflict: "user_id,month" }

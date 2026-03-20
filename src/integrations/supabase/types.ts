@@ -29,6 +29,30 @@ export type Database = {
         }
         Relationships: []
       }
+      menus: {
+        Row: {
+          data: Json
+          id: string
+          month: string
+          status: string
+          type: string
+        }
+        Insert: {
+          data: Json
+          id?: string
+          month: string
+          status?: string
+          type: string
+        }
+        Update: {
+          data?: Json
+          id?: string
+          month?: string
+          status?: string
+          type?: string
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           current_month: string
@@ -44,6 +68,21 @@ export type Database = {
           current_month?: string
           id?: number
           voting_open?: boolean
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          email: string | null
+          id: string
+        }
+        Insert: {
+          email?: string | null
+          id: string
+        }
+        Update: {
+          email?: string | null
+          id?: string
         }
         Relationships: []
       }
@@ -88,6 +127,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      increment_vote_count: { Args: { uid: string }; Returns: undefined }
       is_admin: { Args: { _email: string }; Returns: boolean }
     }
     Enums: {

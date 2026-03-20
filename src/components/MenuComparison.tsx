@@ -1,12 +1,13 @@
-import { type Day, MEALS, type VoteMap, type Choice } from "@/types/voting";
+import { type Choice, type VoteMap, type VoteValue, MEALS } from "@/types/voting";
+import { getMealVote } from "@/lib/voteUtils";
 import MealSection from "./MealSection";
 
 interface Props {
   day: string;
   menuA: any;
   menuB: any;
-  votes: Record<string, string>;
-  onVote: (key: string, choice: "A" | "B") => void;
+  votes: VoteMap;
+  onVote: (key: string, choice: Choice, value: VoteValue) => void;
   disabled?: boolean;
 }
 
@@ -24,11 +25,10 @@ export default function MenuComparison({ day, menuA, menuB, votes, onVote, disab
           <MealSection
             key={key}
             meal={meal}
-            voteKey={key}
-            currentChoice={votes[key]}
+            currentVote={getMealVote(votes, key)}
             menuAItems={itemsA}
             menuBItems={itemsB}
-            onChoose={(choice) => onVote(key, choice)}
+            onChoose={(choice, value) => onVote(key, choice, value)}
             disabled={disabled}
           />
         );

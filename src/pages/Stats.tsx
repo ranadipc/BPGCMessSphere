@@ -1,13 +1,39 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useSettings } from "@/hooks/useVoting";
 import Navbar from "@/components/Navbar";
-import { DAYS, MEALS } from "@/types/voting";
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
+import { useSettings } from "@/hooks/useVoting";
+import { DAY_LABELS, DAYS, MEAL_LABELS, MEALS } from "@/types/voting";
+import { normalizeMealVote } from "@/lib/voteUtils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+type MenuStats = {
+  score: number;
+  ticks: number;
+  crosses: number;
+  neutrals: number;
+};
+
+type MealStats = {
+  A: MenuStats;
+  B: MenuStats;
+};
+
+const emptyMenuStats = (): MenuStats => ({
+  score: 0,
+  ticks: 0,
+  crosses: 0,
+  neutrals: 0,
+});
+
+const emptyMealStats = (): MealStats => ({
+  A: emptyMenuStats(),
+  B: emptyMenuStats(),
+});
 
 export default function Stats() {
   const { settings } = useSettings();
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<Record<string, MealStats>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,23 +46,25 @@ export default function Stats() {
         .eq("month", settings.current_month)
         .eq("status", "submitted");
 
-      const result: any = {};
-
-      DAYS.forEach((day) => {
+      const result = DAYS.reduce<Record<string, MealStats>>((acc, day) => {
         MEALS.forEach((meal) => {
-          const key = `${day}_${meal}`;
-          let countA = 0;
-          let countB = 0;
+          acc[`${day}_${meal}`] = emptyMealStats();
+        });
+        return acc;
+      }, {});
 
-          votes?.forEach((row: any) => {
-            if (row.votes?.[key] === "A") countA++;
-            if (row.votes?.[key] === "B") countB++;
+      votes?.forEach((row: { votes: Json }) => {
+        Object.entries(result).forEach(([key, current]) => {
+          const mealVote = normalizeMealVote(row.votes?.[key]);
+
+          (["A", "B"] as const).forEach((menu) => {
+            const value = mealVote[menu];
+            current[menu].score += value;
+
+            if (value === 1) current[menu].ticks += 1;
+            else if (value === -1) current[menu].crosses += 1;
+            else current[menu].neutrals += 1;
           });
-
-          result[key] = [
-            { name: "Menu A", value: countA },
-            { name: "Menu B", value: countB },
-          ];
         });
       });
 
@@ -52,97 +80,81 @@ export default function Stats() {
   return (
     <div className="min-h-screen pb-10">
       <Navbar />
-      <div className="container max-w-5xl mx-auto p-6 space-y-10">
-        <h2 className="text-xl font-display font-bold text-center">
-          Voting Stats — {settings?.current_month}
-        </h2>
-  
-        {DAYS.map((day) => (
-          <div key={day} className="space-y-6">
-            <h3 className="text-primary text-lg font-semibold">
-              {day === "MON" && "Monday"}
-              {day === "TUE" && "Tuesday"}
-              {day === "WED" && "Wednesday"}
-              {day === "THU" && "Thursday"}
-              {day === "FRI" && "Friday"}
-              {day === "SAT" && "Saturday"}
-              {day === "SUN" && "Sunday"}
-            </h3>
-  
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {MEALS.map((meal) => {
-                const key = `${day}_${meal}`;
-  
-                  const baseData = data[key] || [
-                    { name: "Menu A", value: 0 },
-                    { name: "Menu B", value: 0 },
-                  ];
-                  
-                  const total =
-                    (baseData[0]?.value || 0) +
-                    (baseData[1]?.value || 0);
-                  
-                  const chartData = baseData.map((item: any) => ({
-                    ...item,
-                  }));
-                  
-  
-                return (
-                  <div key={key} className="glass-card p-4 text-center">
-                    <p className="font-semibold mb-3">
-                      {meal === "BRE" && "Breakfast"}
-                      {meal === "LUN" && "Lunch"}
-                      {meal === "SNA" && "Snacks"}
-                      {meal === "DIN" && "Dinner"}
-                    </p>
-  
-                    <ResponsiveContainer width="100%" height={180}>
-                      <PieChart>
-                        <Pie
-                          data={chartData}
-                          dataKey="value"
-                          outerRadius={60}
-                          label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
-                            if (percent <= 0) return "";
-                          
-                            const RADIAN = Math.PI / 180;
-                            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                            const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                            const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                          
-                            return (
-                              <text
-                                x={x}
-                                y={y}
-                                fill="#ffffff"
-                                textAnchor="middle"
-                                dominantBaseline="central"
-                                fontSize={14}
-                                fontWeight="600"
-                              >
-                                {(percent * 100).toFixed(0)}%
-                              </text>
-                            );
-                          }}
-                          
-                        >
-                          {chartData?.map((entry: any, index: number) => (
-                            <Cell
-                              key={index}
-                              fill={index === 0 ? "#00f5d4" : "#9b5de5"}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                );
-              })}
+      <TooltipProvider>
+        <div className="container max-w-5xl mx-auto p-6 space-y-10">
+          <h2 className="text-xl font-display font-bold text-center">
+            Voting Stats - {settings?.current_month}
+          </h2>
+
+          {DAYS.map((day) => (
+            <div key={day} className="space-y-6">
+              <h3 className="text-primary text-lg font-semibold">
+                {DAY_LABELS[day]}
+              </h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {MEALS.map((meal) => {
+                  const key = `${day}_${meal}`;
+                  const mealStats = data[key] ?? emptyMealStats();
+                  const maxMagnitude = Math.max(
+                    1,
+                    Math.abs(mealStats.A.score),
+                    Math.abs(mealStats.B.score),
+                  );
+
+                  return (
+                    <div key={key} className="glass-card p-4 space-y-4">
+                      <p className="font-semibold text-center">
+                        {MEAL_LABELS[meal]}
+                      </p>
+
+                      {(["A", "B"] as const).map((menu) => {
+                        const stats = mealStats[menu];
+                        const width = `${(Math.abs(stats.score) / maxMagnitude) * 100}%`;
+                        const positive = stats.score >= 0;
+
+                        return (
+                          <div key={menu} className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className={menu === "A" ? "text-primary font-semibold" : "text-accent font-semibold"}>
+                                Menu {menu}
+                              </span>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                    type="button"
+                                    className="rounded-full border border-border/60 px-2 py-1 text-xs text-muted-foreground"
+                                  >
+                                    Score impact: {stats.score > 0 ? `+${stats.score}` : stats.score}
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <div className="space-y-1 text-xs">
+                                    <p>Ticks: {stats.ticks}</p>
+                                    <p>Crosses: {stats.crosses}</p>
+                                    <p>Neutral: {stats.neutrals}</p>
+                                  </div>
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+
+                            <div className="h-3 overflow-hidden rounded-full bg-muted">
+                              <div
+                                className={positive ? (menu === "A" ? "h-full bg-primary" : "h-full bg-accent") : "h-full bg-destructive"}
+                                style={{ width }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </TooltipProvider>
     </div>
   );
 }

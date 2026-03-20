@@ -11,6 +11,8 @@ import SubmitModal from "@/components/SubmitModal";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { countCompletedMeals, getMissingPositiveMeals } from "@/lib/voteUtils";
+import type { Json } from "@/integrations/supabase/types";
 
 
 export default function Voting() {
@@ -41,8 +43,8 @@ export default function Voting() {
   
 
   const [selectedDay, setSelectedDay] = useState<Day>("MON");
-  const [menuA, setMenuA] = useState<any>(null);
-const [menuB, setMenuB] = useState<any>(null);
+  const [menuA, setMenuA] = useState<Record<string, any> | null>(null);
+  const [menuB, setMenuB] = useState<Record<string, any> | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -63,8 +65,8 @@ const [menuB, setMenuB] = useState<any>(null);
       const a = data?.find((m) => m.type === "A");
       const b = data?.find((m) => m.type === "B");
   
-      setMenuA(a?.data || null);
-      setMenuB(b?.data || null);
+      setMenuA((a?.data as Json as Record<string, any>) || null);
+      setMenuB((b?.data as Json as Record<string, any>) || null);
     };
   
     fetchMenus();
@@ -76,14 +78,21 @@ const [menuB, setMenuB] = useState<any>(null);
     return null;
   }
 
+  const missingMeals = getMissingPositiveMeals(votes);
+  const missingMealSet = new Set<string>(missingMeals);
   const completedDays = DAYS.filter((day) =>
-    MEALS.every((meal) => votes[`${day}_${meal}`])
+    MEALS.every((meal) => !missingMealSet.has(`${day}_${meal}`))
   );
 
   const currentDayIndex = DAYS.indexOf(selectedDay);
-  const voteCount = Object.keys(votes).length;
+  const voteCount = countCompletedMeals(votes);
 
   const handleSubmit = async () => {
+    if (missingMeals.length > 0) {
+      alert("Each meal must have at least one tick on Menu A or Menu B before submission.");
+      return;
+    }
+
     const ok = await submitVotes();
     if (ok) setShowModal(true);
   };
@@ -179,8 +188,8 @@ const [menuB, setMenuB] = useState<any>(null);
   menuA={menuA}
   menuB={menuB}
   votes={votes}
-  onVote={(key, choice) => {
-    setVote(key, choice);
+  onVote={(key, choice, value) => {
+    setVote(key, choice, value);
   }}
   disabled={status === "submitted"}
 />
@@ -211,6 +220,7 @@ const [menuB, setMenuB] = useState<any>(null);
 
         <VoteButton
           voteCount={voteCount}
+          missingCount={missingMeals.length}
           onSubmit={handleSubmit}
           disabled={status === "submitted"}
         />

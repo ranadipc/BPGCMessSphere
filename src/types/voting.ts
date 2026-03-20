@@ -1,9 +1,15 @@
 export type Meal = "BRE" | "LUN" | "SNA" | "DIN";
 export type Day = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 export type Choice = "A" | "B";
+export type VoteValue = -1 | 0 | 1;
+export type MealVote = {
+  A: VoteValue;
+  B: VoteValue;
+};
+export type LegacyVoteValue = Choice | Partial<Record<Choice, number>> | null;
 
 export type VoteKey = `${Day}_${Meal}`;
-export type VoteMap = Record<string, Choice>;
+export type VoteMap = Record<string, MealVote>;
 
 export const DAYS: Day[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 export const DAY_LABELS: Record<Day, string> = {
