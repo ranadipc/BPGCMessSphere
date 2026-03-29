@@ -86,7 +86,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .s1 .hs:last-child { border-right:none; }
 .s1 .hs .n { font-size:44px; font-weight:800; color:var(--teal2); line-height:1; }
 .s1 .hs .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:6px; }
-.s1 .author { margin-top:28px; text-align:center; font-size:14px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.3px; }
+.s1 .author { margin-top:34px; text-align:center; font-size:16px; font-weight:800; color:#9FDAD4; letter-spacing:0.4px; text-shadow:0 0 18px rgba(20,184,166,0.12); }
 
 /* SLIDE 2 – PROBLEM */
 .prob-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
@@ -436,7 +436,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
   <div class="sb two">
     <div class="col c55">
       <div class="ssec">Conversion Funnel — Real Data</div>
-      <svg width="100%" viewBox="0 0 460 220" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; max-width:460px;">
+      <svg width="100%" viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; max-width:460px;">
         <!-- Step 1: 100% width -->
         <polygon id="funnel-step-registered" class="funnel-step" points="10,0 450,0 418,62 42,62" fill="#0D9488" opacity="0.9">
           <title id="funnel-title-registered">Registered Users: 2,220 (100%)</title>
@@ -445,18 +445,18 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
         <text id="funnel-registered" x="230" y="44" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,220 - 100%</text>
 
         <!-- Step 2: 93.2% -->
-        <polygon id="funnel-step-started" class="funnel-step" points="42,74 418,74 382,136 78,136" fill="#0891B2" opacity="0.9">
+        <polygon id="funnel-step-started" class="funnel-step" points="42,82 418,82 382,150 78,150" fill="#0891B2" opacity="0.92">
           <title id="funnel-title-started">Started Voting: 2,069 (93.2%)</title>
         </polygon>
-        <text x="230" y="93" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Started Voting (Draft + Submitted)</text>
-        <text id="funnel-started" x="230" y="114" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,069 - 93.2%</text>
+        <text x="230" y="106" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Started Voting (Draft + Submitted)</text>
+        <text id="funnel-started" x="230" y="128" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,069 - 93.2%</text>
 
         <!-- Step 3: 62.4% -->
-        <polygon id="funnel-step-submitted" class="funnel-step" points="78,148 382,148 320,210 140,210" fill="#059669" opacity="0.9">
+        <polygon id="funnel-step-submitted" class="funnel-step" points="78,170 382,170 320,244 140,244" fill="#0B9B77" opacity="0.95">
           <title id="funnel-title-submitted">Successfully Submitted: 1,385 (62.4%)</title>
         </polygon>
-        <text x="230" y="163" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Successfully Submitted</text>
-        <text id="funnel-submitted" x="230" y="184" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">1,385 - 62.4%</text>
+        <text x="230" y="194" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Successfully Submitted</text>
+        <text id="funnel-submitted" x="230" y="217" text-anchor="middle" fill="rgba(255,255,255,0.82)" font-size="12" font-family="Segoe UI,sans-serif">1,385 - 62.4%</text>
       </svg>
     </div>
     <div class="col c45">
@@ -663,33 +663,39 @@ async function fetchLiveCount(){
     const registered=readCount(usersRes);
     const started=readCount(startedRes);
     const submitted=readCount(submittedRes);
-    if(registered===null||started===null||submitted===null||registered<=0||started<=0) return;
+    const fallbackRegistered=Number((document.getElementById('live-user-count')?.textContent || '2220').replace(/,/g,'')) || 2220;
+    if(started===null||submitted===null||started<=0||submitted<=0) return;
+
+    const saneRegistered =
+      registered !== null && registered >= submitted && registered >= started
+        ? registered
+        : Math.max(fallbackRegistered, started, submitted);
 
     const drafts=Math.max(started-submitted,0);
-    const submittedRate=(submitted/registered)*100;
-    const startedRate=(started/registered)*100;
+    const submittedRate=(submitted/saneRegistered)*100;
+    const startedRate=(started/saneRegistered)*100;
     const draftRate=started>0?(drafts/started)*100:0;
     const fmtNum=(n)=>n.toLocaleString();
     const fmtPct=(n)=>n.toFixed(1)+'%';
 
-    document.getElementById('live-user-count').textContent=fmtNum(registered);
+    document.getElementById('live-user-count').textContent=fmtNum(saneRegistered);
     document.getElementById('live-submitted-count').textContent=fmtNum(submitted);
     document.getElementById('live-submitted-rate').textContent=fmtPct(submittedRate);
 
     document.getElementById('nsm-percentage').textContent=fmtPct(submittedRate);
     document.getElementById('nsm-strip-percentage').textContent=fmtPct(submittedRate);
     document.getElementById('submitted-strip-count').textContent=fmtNum(submitted);
-    document.getElementById('registered-strip-count').textContent=fmtNum(registered);
+    document.getElementById('registered-strip-count').textContent=fmtNum(saneRegistered);
 
-    document.getElementById('metric-registered').textContent=fmtNum(registered);
+    document.getElementById('metric-registered').textContent=fmtNum(saneRegistered);
     document.getElementById('metric-submitted').textContent=fmtNum(submitted);
     document.getElementById('metric-drafts').textContent=fmtNum(drafts);
     document.getElementById('metric-rate').textContent=fmtPct(submittedRate);
 
-    document.getElementById('funnel-registered').textContent=fmtNum(registered)+' - 100%';
+    document.getElementById('funnel-registered').textContent=fmtNum(saneRegistered)+' - 100%';
     document.getElementById('funnel-started').textContent=fmtNum(started)+' - '+fmtPct(startedRate);
     document.getElementById('funnel-submitted').textContent=fmtNum(submitted)+' - '+fmtPct(submittedRate);
-    document.getElementById('funnel-title-registered').textContent='Registered Users: '+fmtNum(registered)+' (100%)';
+    document.getElementById('funnel-title-registered').textContent='Registered Users: '+fmtNum(saneRegistered)+' (100%)';
     document.getElementById('funnel-title-started').textContent='Started Voting: '+fmtNum(started)+' ('+fmtPct(startedRate)+')';
     document.getElementById('funnel-title-submitted').textContent='Successfully Submitted: '+fmtNum(submitted)+' ('+fmtPct(submittedRate)+') | Drafts: '+fmtNum(drafts)+' ('+fmtPct(draftRate)+' of starters)';
   }catch(e){}
