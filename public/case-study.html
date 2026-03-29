@@ -86,7 +86,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .s1 .hs:last-child { border-right:none; }
 .s1 .hs .n { font-size:44px; font-weight:800; color:var(--teal2); line-height:1; }
 .s1 .hs .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:6px; }
-.s1 .author { position:absolute; bottom:22px; left:0; right:0; text-align:center; font-size:12px; color:rgba(255,255,255,0.2); }
+.s1 .author { margin-top:28px; text-align:center; font-size:14px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.3px; }
 
 /* SLIDE 2 – PROBLEM */
 .prob-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
@@ -116,7 +116,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .actor p { font-size:11px; color:var(--muted); line-height:1.5; }
 
 /* SLIDE 4 – VOTING DEMO */
-.vdemo { background:#0A1020; border:1px solid var(--border); border-radius:14px; padding:20px; }
+.vdemo { background:#0A1020; border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.03); }
 .vdemo .vdt { font-size:11px; font-weight:700; color:var(--teal2); text-align:center; margin-bottom:14px; text-transform:uppercase; letter-spacing:1px; }
 .vd-menus { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
 .vd-menu { background:rgba(255,255,255,0.04); border-radius:8px; padding:11px; border:1px solid var(--border); }
@@ -124,16 +124,16 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .vd-menu.a .ml { color:var(--teal2); } .vd-menu.b .ml { color:var(--amber); }
 .vd-menu p { font-size:12px; color:var(--muted); line-height:1.6; }
 .vd-controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-.vd-side { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:11px; }
+.vd-side { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:8px; padding:11px; }
 .vd-side .slabel { font-size:10px; font-weight:700; margin-bottom:9px; text-transform:uppercase; letter-spacing:0.8px; display:flex; justify-content:space-between; align-items:center; }
 .vd-side.a .slabel .sn { color:var(--teal2); } .vd-side.b .slabel .sn { color:var(--amber); }
 .slabel .sval { font-size:10px; font-weight:600; color:var(--muted); }
 .vd-btns { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
-.vdbtn { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 3px; border-radius:7px; cursor:pointer; gap:3px; font-size:10px; font-weight:700; transition:all 0.15s; border:1.5px solid transparent; background:rgba(255,255,255,0.05); color:var(--muted); user-select:none; }
-.vdbtn:hover { background:rgba(255,255,255,0.09); color:white; }
-.vdbtn.sel-pos { background:var(--teal); border-color:var(--teal2); color:white; box-shadow:0 0 12px rgba(13,148,136,0.4); }
-.vdbtn.sel-neu { background:rgba(245,158,11,0.2); border-color:var(--amber); color:var(--amber); }
-.vdbtn.sel-neg { background:rgba(239,68,68,0.18); border-color:var(--red); color:var(--red); }
+.vdbtn { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 3px; border-radius:9px; cursor:pointer; gap:3px; font-size:10px; font-weight:700; transition:all 0.15s; border:1px solid rgba(255,255,255,0.04); background:#22283A; color:#9CA3AF; user-select:none; }
+.vdbtn:hover { background:#2A3145; color:white; }
+.vdbtn.sel-pos { background:#1C978F; border-color:#D9FFFB; color:white; box-shadow:0 0 0 2px rgba(28,151,143,0.35), inset 0 0 0 1px rgba(255,255,255,0.18); }
+.vdbtn.sel-neu { background:rgba(245,158,11,0.18); border-color:var(--amber); color:#FBBF24; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04); }
+.vdbtn.sel-neg { background:rgba(239,68,68,0.18); border-color:var(--red); color:#F87171; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.04); }
 .vdbtn.blocked { opacity:0.25; cursor:not-allowed; pointer-events:none; }
 .vdbtn .bico { font-size:15px; line-height:1; }
 .vdbtn .btxt { font-size:9px; }
@@ -141,6 +141,8 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 .vd-rule strong { color:var(--teal2); }
 .vd-status { margin-top:7px; text-align:center; font-size:11px; color:var(--red); font-weight:600; min-height:16px; }
 .vd-status.ok { color:var(--green); }
+.funnel-step { cursor:pointer; transition:opacity 0.2s ease; }
+.funnel-step:hover { opacity:1; }
 
 /* SLIDE 5 – RICE */
 .rice-table { width:100%; border-collapse:collapse; font-size:12.5px; }
@@ -223,8 +225,8 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
       <div class="hs"><div class="n">62.4%</div><div class="l">Completion Rate</div></div>
       <div class="hs"><div class="n">3</div><div class="l">Mess Canteens</div></div>
     </div>
+    <div class="author">Ranadip Chakraborty · BITS Pilani Goa · Mess Convener · 2026</div>
   </div>
-  <div class="author">Ranadip Chakraborty · BITS Pilani Goa · Mess Convener · 2026</div>
 </div>
 
 <!-- ═══════ SLIDE 2: PROBLEM ═══════ -->
@@ -434,28 +436,27 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
   <div class="sb two">
     <div class="col c55">
       <div class="ssec">Conversion Funnel — Real Data</div>
-      <svg width="100%" viewBox="0 0 460 310" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; max-width:460px;">
+      <svg width="100%" viewBox="0 0 460 220" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; max-width:460px;">
         <!-- Step 1: 100% width -->
-        <polygon points="10,0 450,0 418,62 42,62" fill="#0D9488" opacity="0.9"/>
+        <polygon id="funnel-step-registered" class="funnel-step" points="10,0 450,0 418,62 42,62" fill="#0D9488" opacity="0.9">
+          <title id="funnel-title-registered">Registered Users: 2,220 (100%)</title>
+        </polygon>
         <text x="230" y="23" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Registered Users</text>
         <text id="funnel-registered" x="230" y="44" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,220 - 100%</text>
-        <text id="funnel-unstarted" x="448" y="83" text-anchor="end" fill="#F87171" font-size="10" font-weight="600" font-family="Segoe UI,sans-serif">6.8% did not start</text>
 
         <!-- Step 2: 93.2% -->
-        <polygon points="42,70 418,70 384,132 76,132" fill="#0891B2" opacity="0.9"/>
+        <polygon id="funnel-step-started" class="funnel-step" points="42,74 418,74 382,136 78,136" fill="#0891B2" opacity="0.9">
+          <title id="funnel-title-started">Started Voting: 2,069 (93.2%)</title>
+        </polygon>
         <text x="230" y="93" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Started Voting (Draft + Submitted)</text>
         <text id="funnel-started" x="230" y="114" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,069 - 93.2%</text>
-        <text id="funnel-drafts-rate" x="448" y="152" text-anchor="end" fill="#F87171" font-size="10" font-weight="600" font-family="Segoe UI,sans-serif">30.8% remained drafts</text>
 
         <!-- Step 3: 62.4% -->
-        <polygon points="76,140 384,140 322,202 138,202" fill="#059669" opacity="0.9"/>
+        <polygon id="funnel-step-submitted" class="funnel-step" points="78,148 382,148 320,210 140,210" fill="#059669" opacity="0.9">
+          <title id="funnel-title-submitted">Successfully Submitted: 1,385 (62.4%)</title>
+        </polygon>
         <text x="230" y="163" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Successfully Submitted</text>
         <text id="funnel-submitted" x="230" y="184" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">1,385 - 62.4%</text>
-
-        <!-- Drafts recovery -->
-        <polygon points="138,210 322,210 300,270 160,270" fill="rgba(245,158,11,0.18)" stroke="#F59E0B" stroke-width="1.5"/>
-        <text id="funnel-drafts-count" x="230" y="234" text-anchor="middle" fill="#FCD34D" font-size="12" font-weight="700" font-family="Segoe UI,sans-serif">681 Drafts - Recovery Target</text>
-        <text x="230" y="254" text-anchor="middle" fill="rgba(245,158,11,0.8)" font-size="10" font-family="Segoe UI,sans-serif">Email nudges + deep links -> push toward 75%+ submission</text>
       </svg>
     </div>
     <div class="col c45">
@@ -569,17 +570,36 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 </div>
 
 <script>
-let cur=1; const total=10;
+const total=10;
+const slideStorageKey='messsphere-case-study-slide';
+function getInitialSlide(){
+  const hashSlide=Number((window.location.hash||'').replace('#slide-',''));
+  if(Number.isInteger(hashSlide) && hashSlide>=1 && hashSlide<=total) return hashSlide;
+  const stored=Number(localStorage.getItem(slideStorageKey));
+  if(Number.isInteger(stored) && stored>=1 && stored<=total) return stored;
+  return 1;
+}
+let cur=getInitialSlide();
 const dotsEl=document.getElementById('dots');
 for(let i=1;i<=total;i++){ const d=document.createElement('span'); d.onclick=()=>goTo(i); dotsEl.appendChild(d); }
 function updateDots(){ dotsEl.querySelectorAll('span').forEach((d,i)=>d.className=(i+1===cur)?'ad':''); }
-function goTo(n){ document.getElementById('slide-'+cur).classList.remove('active'); cur=Math.max(1,Math.min(total,n)); document.getElementById('slide-'+cur).classList.add('active'); document.getElementById('counter').textContent=cur+' / '+total; updateDots(); }
+document.querySelectorAll('.slide').forEach((slide)=>slide.classList.remove('active'));
+function goTo(n){
+  const prev=document.getElementById('slide-'+cur);
+  if(prev) prev.classList.remove('active');
+  cur=Math.max(1,Math.min(total,n));
+  document.getElementById('slide-'+cur).classList.add('active');
+  document.getElementById('counter').textContent=cur+' / '+total;
+  localStorage.setItem(slideStorageKey,String(cur));
+  history.replaceState(null,'','#slide-'+cur);
+  updateDots();
+}
 function go(d){ goTo(cur+d); }
 document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1); if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1); });
-updateDots();
+goTo(cur);
 
 // INTERACTIVE VOTING DEMO
-const vs={a:0,b:0};
+const vs={a:1,b:0};
 const labels={1:'Positive',0:'Neutral','-1':'Negative'};
 const btnMap={a:{1:'a-1',0:'a0','-1':'aneg'},b:{1:'b-1',0:'b0','-1':'bneg'}};
 
@@ -611,12 +631,24 @@ function renderDemo(){
 renderDemo();
 
 // LIVE COUNT
+function getSessionToken(){
+  try{
+    const raw=localStorage.getItem('sb-jreodsnkaoftnzeqgdaz-auth-token');
+    if(!raw) return '';
+    const parsed=JSON.parse(raw);
+    return parsed?.access_token || parsed?.currentSession?.access_token || '';
+  }catch(e){
+    return '';
+  }
+}
+
 async function fetchLiveCount(){
   try{
     const URL='https://jreodsnkaoftnzeqgdaz.supabase.co';
     const KEY='sb_publishable_zWE9UVQkhzNzvO4LNu7jrg_I77wa-6w';
     if(!URL||!KEY) return;
-    const headers={'apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'count=exact','Range':'0-0'};
+    const token=getSessionToken();
+    const headers={'apikey':KEY,'Authorization':'Bearer '+(token||KEY),'Prefer':'count=exact','Range':'0-0'};
     const [usersRes, startedRes, submittedRes]=await Promise.all([
       fetch(URL+'/rest/v1/users?select=id',{headers}),
       fetch(URL+'/rest/v1/votes?select=id',{headers}),
@@ -631,12 +663,11 @@ async function fetchLiveCount(){
     const registered=readCount(usersRes);
     const started=readCount(startedRes);
     const submitted=readCount(submittedRes);
-    if(registered===null||started===null||submitted===null||registered<=0) return;
+    if(registered===null||started===null||submitted===null||registered<=0||started<=0) return;
 
     const drafts=Math.max(started-submitted,0);
     const submittedRate=(submitted/registered)*100;
     const startedRate=(started/registered)*100;
-    const unstartedRate=Math.max(100-startedRate,0);
     const draftRate=started>0?(drafts/started)*100:0;
     const fmtNum=(n)=>n.toLocaleString();
     const fmtPct=(n)=>n.toFixed(1)+'%';
@@ -658,9 +689,9 @@ async function fetchLiveCount(){
     document.getElementById('funnel-registered').textContent=fmtNum(registered)+' - 100%';
     document.getElementById('funnel-started').textContent=fmtNum(started)+' - '+fmtPct(startedRate);
     document.getElementById('funnel-submitted').textContent=fmtNum(submitted)+' - '+fmtPct(submittedRate);
-    document.getElementById('funnel-unstarted').textContent=fmtPct(unstartedRate)+' did not start';
-    document.getElementById('funnel-drafts-rate').textContent=fmtPct(draftRate)+' remained drafts';
-    document.getElementById('funnel-drafts-count').textContent=fmtNum(drafts)+' Drafts - Recovery Target';
+    document.getElementById('funnel-title-registered').textContent='Registered Users: '+fmtNum(registered)+' (100%)';
+    document.getElementById('funnel-title-started').textContent='Started Voting: '+fmtNum(started)+' ('+fmtPct(startedRate)+')';
+    document.getElementById('funnel-title-submitted').textContent='Successfully Submitted: '+fmtNum(submitted)+' ('+fmtPct(submittedRate)+') | Drafts: '+fmtNum(drafts)+' ('+fmtPct(draftRate)+' of starters)';
   }catch(e){}
 }
 fetchLiveCount();
