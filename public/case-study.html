@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mess Sphere – PM Case Study | Ranadip Chakraborty</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:    #0F172A; --bg2: #1E293B; --bg3: #263348;
+  --teal:  #0D9488; --teal2: #14B8A6; --teal3: rgba(20,184,166,0.12);
+  --amber: #F59E0B; --red: #EF4444; --green: #10B981;
+  --border: rgba(255,255,255,0.08); --text: rgba(255,255,255,0.88);
+  --muted: rgba(255,255,255,0.45); --card: rgba(255,255,255,0.05); --card2: rgba(255,255,255,0.08);
+}
+body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); overflow-x:hidden; }
+.slide { display:none; width:100%; min-height:100vh; position:relative; flex-direction:column; }
+.slide.active { display:flex; }
+
+/* NAV */
+.nav-bar { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:200; display:flex; align-items:center; gap:4px; background:rgba(15,23,42,0.92); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:50px; padding:8px 14px; }
+.nav-bar button { background:none; border:none; color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; padding:5px 12px; border-radius:30px; transition:all 0.2s; }
+.nav-bar button:hover { background:var(--card2); color:white; }
+.nav-bar .counter { font-size:11px; color:var(--muted); padding:0 10px; border-left:1px solid var(--border); border-right:1px solid var(--border); white-space:nowrap; }
+.dot-nav { display:flex; gap:4px; align-items:center; padding:0 6px; }
+.dot-nav span { width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,0.2); cursor:pointer; transition:all 0.2s; }
+.dot-nav span.ad { background:var(--teal2); width:16px; border-radius:3px; }
+
+/* SHARED HEADER */
+.sh { background:var(--bg2); padding:16px 48px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.sh .sn { width:28px; height:28px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:white; flex-shrink:0; }
+.sh h2 { font-size:19px; font-weight:700; color:white; }
+.sh .st { margin-left:auto; font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:2px; }
+
+/* BODY */
+.sb { flex:1; padding:26px 48px 80px; display:flex; flex-direction:column; gap:16px; }
+.sb.two { flex-direction:row; gap:28px; }
+.col { display:flex; flex-direction:column; gap:14px; }
+.c55 { flex:0 0 54%; } .c45 { flex:1; } .c60 { flex:0 0 58%; } .c40 { flex:1; }
+.ssec { font-size:10px; font-weight:700; color:var(--teal2); text-transform:uppercase; letter-spacing:1.8px; }
+
+/* CARD */
+.card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px; border-left:3px solid var(--teal); }
+.card.am { border-left-color:var(--amber); } .card.re { border-left-color:var(--red); } .card.gr { border-left-color:var(--green); } .card.nt { border-left-color:var(--border); }
+.card h3 { font-size:11px; font-weight:700; color:var(--teal2); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; }
+.card.am h3 { color:var(--amber); } .card.gr h3 { color:var(--green); }
+.card p, .card li { font-size:13px; color:var(--text); line-height:1.65; }
+.card ul { padding-left:16px; } .card ul li { margin-bottom:4px; }
+
+/* STAT */
+.stat-row { display:flex; gap:12px; }
+.sbox { flex:1; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 14px; text-align:center; }
+.sbox .big { font-size:30px; font-weight:800; color:var(--teal2); line-height:1; }
+.sbox .lbl { font-size:10px; color:var(--muted); margin-top:6px; text-transform:uppercase; letter-spacing:0.8px; }
+
+/* TIMELINE */
+.tl { display:flex; flex-direction:column; }
+.ti { display:flex; gap:12px; align-items:flex-start; }
+.ti .dc { display:flex; flex-direction:column; align-items:center; }
+.ti .dot { width:11px; height:11px; border-radius:50%; background:var(--teal); flex-shrink:0; margin-top:3px; }
+.ti .line { width:2px; flex:1; background:var(--border); min-height:16px; }
+.ti:last-child .line { display:none; }
+.ti .tc { padding-bottom:12px; }
+.ti .tt { font-size:13px; font-weight:700; color:white; }
+.ti .td { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.5; }
+
+/* PILLS */
+.pills { display:flex; flex-wrap:wrap; gap:7px; }
+.pill { background:var(--teal3); color:var(--teal2); font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid rgba(20,184,166,0.25); }
+
+/* QUOTE */
+.quote { background:rgba(13,148,136,0.08); border-left:3px solid var(--teal); padding:14px 16px; border-radius:0 8px 8px 0; }
+.quote p { font-style:italic; font-size:13px; color:var(--text); line-height:1.6; }
+.quote .attr { font-style:normal; font-size:11px; color:var(--muted); margin-top:8px; font-weight:600; }
+
+.pnum { position:absolute; bottom:14px; right:22px; font-size:11px; color:rgba(255,255,255,0.15); }
+
+/* SLIDE 1 – TITLE */
+.s1 { background:var(--bg); justify-content:center; align-items:center; text-align:center; padding:48px; }
+.s1 .badge { display:inline-block; background:var(--teal3); border:1px solid rgba(20,184,166,0.3); color:var(--teal2); font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:6px 18px; border-radius:30px; margin-bottom:22px; }
+.s1 h1 { font-size:68px; font-weight:900; letter-spacing:-2.5px; line-height:1; margin-bottom:6px; }
+.s1 h1 span { color:var(--teal2); }
+.s1 .tagline { font-size:16px; color:var(--muted); margin-bottom:52px; max-width:520px; margin-left:auto; margin-right:auto; line-height:1.6; }
+.s1 .hs-row { display:flex; justify-content:center; }
+.s1 .hs { text-align:center; padding:0 44px; border-right:1px solid var(--border); }
+.s1 .hs:last-child { border-right:none; }
+.s1 .hs .n { font-size:44px; font-weight:800; color:var(--teal2); line-height:1; }
+.s1 .hs .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-top:6px; }
+.s1 .author { position:absolute; bottom:22px; left:0; right:0; text-align:center; font-size:12px; color:rgba(255,255,255,0.2); }
+
+/* SLIDE 2 – PROBLEM */
+.prob-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.pg { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+.pg.hi { background:var(--teal); border-color:var(--teal); }
+.pg h4 { font-size:10px; font-weight:800; color:var(--teal2); text-transform:uppercase; letter-spacing:0.7px; margin-bottom:7px; }
+.pg.hi h4 { color:rgba(255,255,255,0.65); }
+.pg p, .pg li { font-size:12.5px; color:var(--text); line-height:1.6; }
+.pg.hi p { color:white; }
+.pg ul { padding-left:14px; }
+.pie-wrap { display:flex; align-items:center; gap:20px; }
+.pie-legend { display:flex; flex-direction:column; gap:10px; }
+.pie-item { display:flex; align-items:center; gap:10px; }
+.pie-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+.pie-item .pn { font-size:22px; font-weight:800; color:white; }
+.pie-item .pl { font-size:12px; color:var(--muted); }
+
+/* SLIDE 3 – JTBD */
+.jtbd-box { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+.jtbd-box .jl { font-size:10px; font-weight:700; color:var(--teal2); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:7px; }
+.jtbd-box p { font-size:13px; color:var(--text); line-height:1.65; }
+.jtbd-box p em { color:var(--teal2); font-style:normal; font-weight:700; }
+.actor-row { display:flex; gap:10px; }
+.actor { flex:1; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center; }
+.actor .icon { font-size:24px; margin-bottom:6px; }
+.actor h4 { font-size:12px; font-weight:700; color:white; margin-bottom:4px; }
+.actor p { font-size:11px; color:var(--muted); line-height:1.5; }
+
+/* SLIDE 4 – VOTING DEMO */
+.vdemo { background:#0A1020; border:1px solid var(--border); border-radius:14px; padding:20px; }
+.vdemo .vdt { font-size:11px; font-weight:700; color:var(--teal2); text-align:center; margin-bottom:14px; text-transform:uppercase; letter-spacing:1px; }
+.vd-menus { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.vd-menu { background:rgba(255,255,255,0.04); border-radius:8px; padding:11px; border:1px solid var(--border); }
+.vd-menu .ml { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+.vd-menu.a .ml { color:var(--teal2); } .vd-menu.b .ml { color:var(--amber); }
+.vd-menu p { font-size:12px; color:var(--muted); line-height:1.6; }
+.vd-controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.vd-side { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:11px; }
+.vd-side .slabel { font-size:10px; font-weight:700; margin-bottom:9px; text-transform:uppercase; letter-spacing:0.8px; display:flex; justify-content:space-between; align-items:center; }
+.vd-side.a .slabel .sn { color:var(--teal2); } .vd-side.b .slabel .sn { color:var(--amber); }
+.slabel .sval { font-size:10px; font-weight:600; color:var(--muted); }
+.vd-btns { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
+.vdbtn { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 3px; border-radius:7px; cursor:pointer; gap:3px; font-size:10px; font-weight:700; transition:all 0.15s; border:1.5px solid transparent; background:rgba(255,255,255,0.05); color:var(--muted); user-select:none; }
+.vdbtn:hover { background:rgba(255,255,255,0.09); color:white; }
+.vdbtn.sel-pos { background:var(--teal); border-color:var(--teal2); color:white; box-shadow:0 0 12px rgba(13,148,136,0.4); }
+.vdbtn.sel-neu { background:rgba(245,158,11,0.2); border-color:var(--amber); color:var(--amber); }
+.vdbtn.sel-neg { background:rgba(239,68,68,0.18); border-color:var(--red); color:var(--red); }
+.vdbtn.blocked { opacity:0.25; cursor:not-allowed; pointer-events:none; }
+.vdbtn .bico { font-size:15px; line-height:1; }
+.vdbtn .btxt { font-size:9px; }
+.vd-rule { margin-top:10px; background:rgba(13,148,136,0.1); border-radius:7px; padding:9px 13px; font-size:11.5px; color:var(--muted); text-align:center; border:1px solid rgba(13,148,136,0.18); }
+.vd-rule strong { color:var(--teal2); }
+.vd-status { margin-top:7px; text-align:center; font-size:11px; color:var(--red); font-weight:600; min-height:16px; }
+.vd-status.ok { color:var(--green); }
+
+/* SLIDE 5 – RICE */
+.rice-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+.rice-table th { background:rgba(255,255,255,0.04); color:var(--muted); padding:9px 12px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid var(--border); }
+.rice-table td { padding:9px 12px; border-bottom:1px solid var(--border); color:var(--text); }
+.rice-table tr:hover td { background:var(--card); }
+.rice-table .score { font-weight:800; color:var(--teal2); font-size:14px; }
+.bs { font-size:10px; font-weight:700; padding:3px 9px; border-radius:10px; white-space:nowrap; }
+.bs.sh { background:rgba(16,185,129,0.18); color:#34D399; }
+.bs.ct { background:rgba(239,68,68,0.12); color:#F87171; }
+.nsm-strip { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:flex; align-items:center; gap:20px; }
+.nsm-strip .nl { font-size:10px; font-weight:700; color:var(--teal2); text-transform:uppercase; letter-spacing:1.2px; }
+.nsm-strip .nv { font-size:13px; font-weight:700; color:white; margin-top:3px; }
+.nsm-strip .nr { margin-left:auto; text-align:right; }
+.nsm-strip .nr .nrn { font-size:30px; font-weight:900; color:var(--teal2); }
+.nsm-strip .nr .nrs { font-size:10px; color:var(--muted); }
+
+/* SLIDE 6 – ARCH */
+.arch { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+.arch-layer { background:rgba(13,148,136,0.1); border:1px solid rgba(13,148,136,0.2); border-radius:6px; padding:6px 12px; font-size:10px; font-weight:700; color:var(--teal2); text-align:center; text-transform:uppercase; letter-spacing:0.8px; }
+.arch-row { display:flex; gap:8px; }
+.arch-box { flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:7px; padding:9px 10px; text-align:center; }
+.arch-box .abt { font-size:10px; font-weight:700; color:var(--teal2); text-transform:uppercase; }
+.arch-box .abv { font-size:11px; color:var(--muted); margin-top:2px; }
+.arch-arr { text-align:center; color:var(--muted); font-size:13px; }
+
+/* SLIDE 8 – JOURNEY */
+.jtable { width:100%; border-collapse:collapse; }
+.jtable th { background:rgba(255,255,255,0.04); color:var(--muted); padding:9px 12px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.8px; border-bottom:1px solid var(--border); }
+.jtable td { padding:9px 12px; border-bottom:1px solid var(--border); font-size:12.5px; vertical-align:top; color:var(--text); }
+.jtable tr:hover td { background:var(--card); }
+.jstage { font-weight:700; color:white; white-space:nowrap; }
+.jthink { color:var(--muted); font-style:italic; }
+.jpain { background:rgba(239,68,68,0.13); color:#F87171; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; display:inline-block; }
+.jwin  { background:rgba(16,185,129,0.13); color:#34D399; font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; display:inline-block; }
+.jneu  { background:rgba(245,158,11,0.13); color:var(--amber); font-size:10px; font-weight:700; padding:2px 8px; border-radius:8px; display:inline-block; }
+
+/* SLIDE 9 – RESULTS */
+.live-box { background:var(--card); border:1px solid rgba(20,184,166,0.3); border-radius:12px; padding:18px 22px; display:flex; align-items:center; gap:16px; }
+.ldot { width:10px; height:10px; border-radius:50%; background:#22C55E; flex-shrink:0; box-shadow:0 0 0 3px rgba(34,197,94,0.2); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,0.2)} 50%{box-shadow:0 0 0 7px rgba(34,197,94,0.07)} }
+.live-n { font-size:46px; font-weight:900; color:white; line-height:1; }
+.live-l { font-size:11px; color:var(--muted); margin-top:3px; }
+.mc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mc { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:13px 14px; }
+.mc .ml { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; }
+.mc .mv { font-size:22px; font-weight:800; color:white; margin:3px 0; }
+.mc .ms { font-size:11px; color:var(--muted); }
+
+/* SLIDE 10 – CTA */
+.s10 { background:var(--bg); justify-content:center; align-items:center; text-align:center; padding:60px 48px; }
+.s10 h2 { font-size:40px; font-weight:900; color:white; line-height:1.15; margin-bottom:14px; max-width:640px; }
+.s10 h2 span { color:var(--teal2); }
+.s10 .sub { font-size:15px; color:var(--muted); margin-bottom:36px; max-width:460px; line-height:1.6; }
+.cta-links { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:36px; }
+.cta-btn { padding:11px 24px; border-radius:8px; font-weight:700; font-size:13px; text-decoration:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:7px; }
+.cta-btn.pr { background:var(--teal); color:white; }
+.cta-btn.pr:hover { background:var(--teal2); }
+.cta-btn.ol { background:transparent; border:1.5px solid var(--border); color:var(--muted); }
+.cta-btn.ol:hover { border-color:rgba(255,255,255,0.3); color:white; }
+.resume-strip { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 22px; display:inline-flex; align-items:center; gap:16px; max-width:500px; }
+.resume-strip .ri { font-size:26px; }
+.resume-strip .rn { font-size:13px; font-weight:700; color:white; text-align:left; }
+.resume-strip .rs { font-size:11px; color:var(--muted); text-align:left; margin-top:2px; }
+.resume-strip a { margin-left:auto; background:var(--teal); color:white; padding:8px 18px; border-radius:7px; font-size:12px; font-weight:700; text-decoration:none; white-space:nowrap; }
+.s10 .foot { position:absolute; bottom:20px; font-size:11px; color:rgba(255,255,255,0.18); }
+</style>
+</head>
+<body>
+
+<!-- ═══════ SLIDE 1 ═══════ -->
+<div class="slide s1 active" id="slide-1">
+  <div>
+    <div class="badge">PM Case Study</div>
+    <h1>Mess<span>Sphere</span></h1>
+    <p class="tagline">How I identified a broken system, shipped a product in days, and got 2,220 students to actually use it</p>
+    <div class="hs-row">
+      <div class="hs"><div class="n">2,220</div><div class="l">Registered Users</div></div>
+      <div class="hs"><div class="n">1,385</div><div class="l">Votes Submitted</div></div>
+      <div class="hs"><div class="n">62.4%</div><div class="l">Completion Rate</div></div>
+      <div class="hs"><div class="n">3</div><div class="l">Mess Canteens</div></div>
+    </div>
+  </div>
+  <div class="author">Ranadip Chakraborty · BITS Pilani Goa · Mess Convener · 2026</div>
+</div>
+
+<!-- ═══════ SLIDE 2: PROBLEM ═══════ -->
+<div class="slide" id="slide-2">
+  <div class="sh"><div class="sn">1</div><h2>The Problem</h2><span class="st">Discovery</span></div>
+  <div class="sb">
+    <div class="prob-grid">
+      <div class="pg"><h4>What is the real problem?</h4><p>Students had no structured way to influence what they eat. Menus repeated without student input, and complaints went unheard because there was no system to turn feedback into decisions.</p></div>
+      <div class="pg"><h4>How is it a real problem?</h4><p>As Mess Convener, I saw the same complaints repeat every week. A survey of <strong style="color:white;">65 students</strong> showed <strong style="color:var(--teal2);">93.8%</strong> said a better system was needed. Zero structured feedback loop existed before Mess Sphere.</p></div>
+      <div class="pg"><h4>What is the value generated?</h4><p><strong style="color:white;">For students:</strong> A real voice in what they eat, less frustration.<br><br><strong style="color:white;">For the committee:</strong> Data-backed, defensible menu decisions. Reduced food wastage through demand signals.</p></div>
+      <div class="pg"><h4>Who is facing the problem?</h4><p>4000+ students and staff across 3 messes (A, C, D) eating 4 meals a day, 7 days a week. Most acute for students with no outside dining option.</p></div>
+      <div class="pg hi"><h4>Why solve it now?</h4><p>As newly appointed Mess Convener, I had the authority and access to actually change things. No one had tried a digital solution before. The problem was clear, the tools were available.</p></div>
+      <div class="pg"><h4>Discovery method</h4><p>Observed complaint patterns as Mess Convener. Ran WhatsApp polls. Conducted direct student interviews. Validated the problem before writing a single line of code.</p></div>
+    </div>
+
+    <div class="ssec">Validation Data — Survey of 65 students</div>
+    <div style="display:flex; gap:18px; align-items:stretch;">
+      <!-- PIE CHART -->
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 22px; display:flex; align-items:center; gap:22px; flex-shrink:0;">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" fill="none" stroke="var(--bg3)" stroke-width="20"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#0D9488" stroke-width="20"
+            stroke-dasharray="283.8 301.6" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#EF4444" stroke-width="20"
+            stroke-dasharray="18.7 301.6" stroke-dashoffset="-283.8" transform="rotate(-90 60 60)"/>
+          <text x="60" y="55" text-anchor="middle" fill="white" font-size="15" font-weight="900" font-family="Segoe UI,sans-serif">93.8%</text>
+          <text x="60" y="70" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="8" font-family="Segoe UI,sans-serif">said YES</text>
+        </svg>
+        <div class="pie-legend">
+          <div class="pie-item">
+            <div class="pie-dot" style="background:#0D9488;"></div>
+            <div><div class="pn">61</div><div class="pl">Yes, very much needed</div></div>
+          </div>
+          <div class="pie-item">
+            <div class="pie-dot" style="background:#EF4444;"></div>
+            <div><div class="pn" style="font-size:16px; color:var(--muted);">4</div><div class="pl">No, earlier was better</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- IMPACT ANALYSIS -->
+      <div style="flex:1; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px;">
+        <div class="ssec" style="margin-bottom:10px;">Impact Analysis</div>
+        <div style="display:flex; flex-direction:column; gap:9px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="color:var(--teal2); font-size:13px; flex-shrink:0;">→</span>
+            <p style="font-size:12.5px; color:var(--text); line-height:1.55;">4000+ students eat at 3 messes daily. With <strong style="color:white;">2220 registrations</strong>, the platform reached more than <strong style="color:var(--teal2);">50% of campus</strong> in the first cycle.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="color:var(--teal2); font-size:13px; flex-shrink:0;">→</span>
+            <p style="font-size:12.5px; color:var(--text); line-height:1.55;">If committee uses vote data to reduce surplus cooking by even <strong style="color:white;">10%</strong>, that directly translates to measurable food cost savings every month.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="color:var(--teal2); font-size:13px; flex-shrink:0;">→</span>
+            <p style="font-size:12.5px; color:var(--text); line-height:1.55;"><strong style="color:var(--teal2);">93.8% approval</strong> in a post-launch survey confirms the system change was both needed and well received by users.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pnum">2 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 3: USERS & JTBD ═══════ -->
+<div class="slide" id="slide-3">
+  <div class="sh"><div class="sn">2</div><h2>Who Are We Solving For?</h2><span class="st">Users & JTBD</span></div>
+  <div class="sb two">
+    <div class="col c55">
+      <div class="ssec">Key Actors</div>
+      <div class="actor-row">
+        <div class="actor"><div class="icon">🎓</div><h4>The Student</h4><p>Eats mess 2 to 3 times daily. Frustrated by repeating menus. Wants influence but has no channel. WhatsApp-native.</p></div>
+        <div class="actor"><div class="icon">🧑‍💼</div><h4>Mess Committee</h4><p>Makes menu decisions by gut or whoever complained loudest. Wants a defensible, data-backed process.</p></div>
+        <div class="actor"><div class="icon">👨‍🍳</div><h4>Mess Vendor</h4><p>Needs clarity on what to cook. Surplus food means loss. Demand signals reduce wastage and improve planning.</p></div>
+      </div>
+      <div class="ssec">User Interviews</div>
+      <div class="quote"><p>"I eat here every single day. The menu just loops and no one asks us. I would 100% vote if there was an easy way to do it."</p><div class="attr">Aryan S., 2nd Year, A mess</div></div>
+      <div class="quote"><p>"As a committee member, decisions were based on whoever yelled loudest on WhatsApp. I wanted actual numbers to back my choices."</p><div class="attr">Priya M., 4th Year, C Mess</div></div>
+    </div>
+    <div class="col c45">
+      <div class="ssec">Jobs To Be Done</div>
+      <div class="jtbd-box"><div class="jl">Student JTBD</div><p>When I <em>sit down to eat the same meal for the fourth time this week</em>, I want to <em>vote for what I actually want</em>, so I can <em>feel like my opinion shapes what gets cooked next month</em>.</p></div>
+      <div class="jtbd-box"><div class="jl">Committee JTBD</div><p>When I <em>plan next month's menu</em>, I want to <em>see ranked student preferences by mess and year</em>, so I can <em>make decisions I can justify and reduce food wastage</em>.</p></div>
+      <div class="jtbd-box"><div class="jl">North Star Metric</div><p><em>% of submitted votes</em> out of total registered users per voting cycle. Captures whether students not only showed up but completed the full process.</p></div>
+      <div style="background:var(--teal3); border:1px solid rgba(20,184,166,0.2); border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+        <div><div class="ssec">North Star Metric</div><div style="font-size:30px; font-weight:900; color:white; line-height:1; margin-top:4px;" id="nsm-percentage">62.4%</div><div style="font-size:11px; color:var(--muted); margin-top:2px;">% of Submitted Votes</div></div>
+        <div style="font-size:36px;">🎯</div>
+      </div>
+    </div>
+  </div>
+  <div class="pnum">3 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 4: VOTING SYSTEM ═══════ -->
+<div class="slide" id="slide-4">
+  <div class="sh"><div class="sn">3</div><h2>How the Voting System Works</h2><span class="st">Product Explainer</span></div>
+  <div class="sb two">
+    <div class="col c55">
+      <div class="ssec">Why +1 / 0 / -1 and not just A or B?</div>
+      <div class="card"><h3>The problem with binary choice</h3><p>A simple "pick A or B" doesn't capture preference strength. A student might strongly want Menu A for breakfast but be fine with either for dinner. Binary systems lose that signal entirely.</p></div>
+      <div class="card am"><h3>What the three-state system gives you</h3><ul><li><strong style="color:var(--teal2);">+1 Tick:</strong> I want this menu for this meal</li><li><strong style="color:var(--amber);">0 Neutral:</strong> Not Making Decision</li><li><strong style="color:var(--red);">-1 Cross:</strong> I do not want this for this meal</li></ul><p style="margin-top:8px;">Result: a weighted preference score per meal the committee can rank and act on.</p></div>
+      <div class="card gr"><h3>The constraint that drove quality</h3><p>Submit is locked until every meal has at least one positive selection. This gentle nudge meant students engaged with each slot rather than skipping through. Paired with a progress bar showing meals remaining, it significantly reduced mid-flow abandonment.</p></div>
+    </div>
+    <div class="col c45">
+      <div class="ssec">Try it — Monday Breakfast (Interactive)</div>
+      <div class="vdemo">
+        <div class="vdt">Monday · Breakfast</div>
+        <div class="vd-menus">
+          <div class="vd-menu a"><div class="ml">Menu A</div><p>Aloo Paratha<br>Curd &amp; Pickle<br>Chai / Coffee</p></div>
+          <div class="vd-menu b"><div class="ml">Menu B</div><p>Idli Sambhar<br>Coconut Chutney<br>Chai / Coffee</p></div>
+        </div>
+        <div class="vd-controls">
+          <div class="vd-side a">
+            <div class="slabel"><span class="sn" style="color:var(--teal2);">Menu A</span><span class="sval" id="val-a">Not Making Decision</span></div>
+            <div class="vd-btns">
+              <button class="vdbtn" id="a-1" onclick="setVote('a',1)"><span class="bico">✓</span><span class="btxt">+1</span></button>
+              <button class="vdbtn sel-neu" id="a0" onclick="setVote('a',0)"><span class="bico">○</span><span class="btxt">0</span></button>
+              <button class="vdbtn" id="aneg" onclick="setVote('a',-1)"><span class="bico">✕</span><span class="btxt">-1</span></button>
+            </div>
+          </div>
+          <div class="vd-side b">
+            <div class="slabel"><span class="sn" style="color:var(--amber);">Menu B</span><span class="sval" id="val-b">Not Making Decision</span></div>
+            <div class="vd-btns">
+              <button class="vdbtn" id="b-1" onclick="setVote('b',1)"><span class="bico">✓</span><span class="btxt">+1</span></button>
+              <button class="vdbtn sel-neu" id="b0" onclick="setVote('b',0)"><span class="bico">○</span><span class="btxt">0</span></button>
+              <button class="vdbtn" id="bneg" onclick="setVote('b',-1)"><span class="bico">✕</span><span class="btxt">-1</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="vd-rule">Rule: <strong>Cannot cross both menus</strong> for the same meal. Need at least <strong>one +1</strong> to submit.</div>
+        <div class="vd-status" id="vote-status">Select at least one +1 to enable submit</div>
+      </div>
+    </div>
+  </div>
+  <div class="pnum">4 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 5: RICE ═══════ -->
+<div class="slide" id="slide-5">
+  <div class="sh"><div class="sn">4</div><h2>What We Built and Why</h2><span class="st">RICE Prioritization</span></div>
+  <div class="sb">
+    <div class="nsm-strip">
+      <div><div class="nl">North Star Metric</div><div class="nv">% of Submitted Votes</div></div>
+      <div class="nr"><div class="nrn" id="nsm-strip-percentage">62.4%</div><div class="nrs"><span id="submitted-strip-count">1,385</span> submitted / <span id="registered-strip-count">2,220</span> registered this cycle</div></div>
+    </div>
+    <table class="rice-table">
+      <thead><tr><th>Feature</th><th>Reach</th><th>Impact</th><th>Confidence</th><th>Effort (wks)</th><th>RICE</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:white;">Menu Voting (+1 / 0 / -1)</strong></td><td>4000</td><td>3</td><td>90%</td><td>2</td><td class="score">5400</td><td><span class="bs sh">Shipped</span></td></tr>
+        <tr><td><strong style="color:white;">Admin Analytics Dashboard</strong></td><td>15</td><td>3</td><td>90%</td><td>2</td><td class="score">20</td><td><span class="bs sh">Shipped</span></td></tr>
+        <tr><td>Either A or B binary selection</td><td>4000</td><td>2</td><td>75%</td><td>1</td><td class="score">6000</td><td><span class="bs ct">Replaced by +1/0/-1</span></td></tr>
+        <tr><td>Google Form based voting</td><td>4000</td><td>1</td><td>80%</td><td>0.5</td><td class="score">6400</td><td><span class="bs ct">No data ownership</span></td></tr>
+        <tr><td>Complaint submission flow</td><td>4000</td><td>2</td><td>65%</td><td>2</td><td class="score">2600</td><td><span class="bs ct">Post-MVP</span></td></tr>
+        <tr><td>Post-meal feedback ratings</td><td>4000</td><td>2</td><td>55%</td><td>3</td><td class="score">1467</td><td><span class="bs ct">Post-MVP</span></td></tr>
+      </tbody>
+    </table>
+    <div class="card nt"><h3>Why Google Forms scored highest but was cut</h3><p>Google Forms has zero data ownership, no access control, no analytics, no draft saving, and cannot enforce completion rules. High RICE score from low effort, but fundamentally the wrong tool for a system that needs to improve over time. The right call was building the product.</p></div>
+  </div>
+  <div class="pnum">5 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 6: BUILD & GTM ═══════ -->
+<div class="slide" id="slide-6">
+  <div class="sh"><div class="sn">5</div><h2>Build, Architecture and GTM</h2><span class="st">Execution</span></div>
+  <div class="sb two">
+    <div class="col c55">
+      <div class="ssec">System Architecture</div>
+      <div class="arch">
+        <div class="arch-layer">Frontend</div>
+        <div class="arch-row">
+          <div class="arch-box"><div class="abt">React + Vite</div><div class="abv">TypeScript + Router</div></div>
+          <div class="arch-box"><div class="abt">Tailwind CSS</div><div class="abv">shadcn / Radix UI</div></div>
+          <div class="arch-box"><div class="abt">React Query</div><div class="abv">State + Caching</div></div>
+        </div>
+        <div class="arch-arr">↕ Supabase Client</div>
+        <div class="arch-layer">Backend — Supabase</div>
+        <div class="arch-row">
+          <div class="arch-box"><div class="abt">Google Auth</div><div class="abv">@goa.bits-pilani.ac.in only</div></div>
+          <div class="arch-box"><div class="abt">PostgreSQL</div><div class="abv">Votes + Menus + Settings</div></div>
+          <div class="arch-box"><div class="abt">Row Level Security</div><div class="abv">SQL triggers + validation</div></div>
+        </div>
+        <div class="arch-arr">↕ CI/CD</div>
+        <div class="arch-layer">Deployment — Vercel</div>
+        <div style="text-align:center; font-size:11px; color:var(--muted); margin-top:3px;">bpgc-mess-sphere.vercel.app</div>
+      </div>
+      <div class="pills">
+        <span class="pill">Lovable</span><span class="pill">Cursor</span><span class="pill">Supabase</span>
+        <span class="pill">SQL</span><span class="pill">Vercel</span><span class="pill">TypeScript</span><span class="pill">React Query</span>
+      </div>
+    </div>
+    <div class="col c45">
+      <div class="ssec">Go-To-Market</div>
+      <div class="card" style="margin-bottom:4px;"><h3>Distribution — Zero Paid Spend</h3><p>Circulated link through all hostel WhatsApp groups covering 4000+ students. Collaborated with the Student Council to broadcast via official BITS Goa email. Reached everyone in under 24 hours.</p></div>
+      <div class="ssec">How We Got People to Actually Finish</div>
+      <div class="tl">
+        <div class="ti"><div class="dc"><div class="dot"></div><div class="line"></div></div><div class="tc"><div class="tt">Reduced clicks to start</div><div class="td">Mess and year selection on one screen. One tap straight into voting. Zero friction before the first interaction.</div></div></div>
+        <div class="ti"><div class="dc"><div class="dot"></div><div class="line"></div></div><div class="tc"><div class="tt">Optimized page load</div><div class="td">Menus fetched once and cached. Draft saves happened silently in the background. No loading screens mid-vote.</div></div></div>
+        <div class="ti"><div class="dc"><div class="dot"></div><div class="line"></div></div><div class="tc"><div class="tt">Gentle nudge to complete</div><div class="td">Submit locked until every meal has a +1. Progress bar showed remaining meals so users knew how close they were.</div></div></div>
+        <div class="ti"><div class="dc"><div class="dot"></div><div class="line"></div></div><div class="tc"><div class="tt">WhatsApp reminder blast</div><div class="td">Reminder messages sent mid-window to draft holders. Deep-linked back into their saved state. Brought back lapsed starters.</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="pnum">6 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 7: FUNNEL ═══════ -->
+<div class="slide" id="slide-7">
+  <div class="sh"><div class="sn">6</div><h2>Drop-off Funnel and Metrics</h2><span class="st">Analytics</span></div>
+  <div class="sb two">
+    <div class="col c55">
+      <div class="ssec">Conversion Funnel — Real Data</div>
+      <svg width="100%" viewBox="0 0 460 310" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; max-width:460px;">
+        <!-- Step 1: 100% width -->
+        <polygon points="10,0 450,0 418,62 42,62" fill="#0D9488" opacity="0.9"/>
+        <text x="230" y="23" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Registered Users</text>
+        <text id="funnel-registered" x="230" y="44" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,220 - 100%</text>
+        <text id="funnel-unstarted" x="448" y="83" text-anchor="end" fill="#F87171" font-size="10" font-weight="600" font-family="Segoe UI,sans-serif">6.8% did not start</text>
+
+        <!-- Step 2: 93.2% -->
+        <polygon points="42,70 418,70 384,132 76,132" fill="#0891B2" opacity="0.9"/>
+        <text x="230" y="93" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Started Voting (Draft + Submitted)</text>
+        <text id="funnel-started" x="230" y="114" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">2,069 - 93.2%</text>
+        <text id="funnel-drafts-rate" x="448" y="152" text-anchor="end" fill="#F87171" font-size="10" font-weight="600" font-family="Segoe UI,sans-serif">30.8% remained drafts</text>
+
+        <!-- Step 3: 62.4% -->
+        <polygon points="76,140 384,140 322,202 138,202" fill="#059669" opacity="0.9"/>
+        <text x="230" y="163" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Successfully Submitted</text>
+        <text id="funnel-submitted" x="230" y="184" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="12" font-family="Segoe UI,sans-serif">1,385 - 62.4%</text>
+
+        <!-- Drafts recovery -->
+        <polygon points="138,210 322,210 300,270 160,270" fill="rgba(245,158,11,0.18)" stroke="#F59E0B" stroke-width="1.5"/>
+        <text id="funnel-drafts-count" x="230" y="234" text-anchor="middle" fill="#FCD34D" font-size="12" font-weight="700" font-family="Segoe UI,sans-serif">681 Drafts - Recovery Target</text>
+        <text x="230" y="254" text-anchor="middle" fill="rgba(245,158,11,0.8)" font-size="10" font-family="Segoe UI,sans-serif">Email nudges + deep links -> push toward 75%+ submission</text>
+      </svg>
+    </div>
+    <div class="col c45">
+      <div class="ssec">Key Metrics</div>
+      <div class="mc-grid">
+        <div class="mc"><div class="ml">Reach Activated</div><div class="mv" id="metric-registered">2,220</div><div class="ms">Students registered through organic campus distribution</div></div>
+        <div class="mc"><div class="ml">North Star Metric</div><div class="mv" id="metric-submitted">1,385</div><div class="ms">Submitted votes captured in the current cycle</div></div>
+        <div class="mc"><div class="ml">Recoverable Drop-off</div><div class="mv" id="metric-drafts">681</div><div class="ms">Started voting but still sitting in draft state</div></div>
+        <div class="mc"><div class="ml">End-to-End Conversion</div><div class="mv" id="metric-rate">62.4%</div><div class="ms">Submitted votes as a share of registered users</div></div>
+      </div>
+      <div class="card am"><h3>Converting 681 Drafts</h3><p>681 users started but did not submit. Next step: email push notifications in the final 48 hours of the voting window, with a direct deep-link back into their saved draft. Target: bring submission rate above 75%.</p></div>
+      <div class="card gr"><h3>Acquisition Cost</h3><p>Zero. WhatsApp groups plus Student Council email. The problem was real enough that the product spread on its own once the first wave voted.</p></div>
+    </div>
+  </div>
+  <div class="pnum">7 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 8: JOURNEY MAP ═══════ -->
+<div class="slide" id="slide-8">
+  <div class="sh"><div class="sn">7</div><h2>User Journey Map</h2><span class="st">Experience</span></div>
+  <div class="sb">
+    <table class="jtable">
+      <thead><tr><th>Stage</th><th>User Action</th><th>What They Are Thinking</th><th>Feeling</th><th>Pain / Win</th></tr></thead>
+      <tbody>
+        <tr><td class="jstage">Awareness</td><td>Sees link in hostel WhatsApp group or official email</td><td class="jthink">"Wait, we can actually vote on the mess menu?"</td><td style="text-align:center; font-size:18px;">😮</td><td><span class="jwin">Win: curiosity triggered immediately</span></td></tr>
+        <tr><td class="jstage">Sign In</td><td>Taps link, sees sign-in page, clicks Google login</td><td class="jthink">"Hope this works with my BITS email"</td><td style="text-align:center; font-size:18px;">😐</td><td><span class="jneu">Neutral: one-click auth, instant access</span></td></tr>
+        <tr><td class="jstage">Setup</td><td>Selects mess and year, agrees to terms, hits Vote Now</td><td class="jthink">"Okay this is clean, let me go"</td><td style="text-align:center; font-size:18px;">🙂</td><td><span class="jwin">Win: under 30 seconds to reach voting</span></td></tr>
+        <tr><td class="jstage">Voting</td><td>Goes day by day, rates Menu A and B for each meal</td><td class="jthink">"28 meals is a lot... but the progress bar is moving"</td><td style="text-align:center; font-size:18px;">😤</td><td><span class="jpain">Pain: 28 meals feels long. Draft save + progress bar reduces this.</span></td></tr>
+        <tr><td class="jstage">Nudge</td><td>Gets WhatsApp reminder or sees locked submit with missing count</td><td class="jthink">"Fine, let me just finish it"</td><td style="text-align:center; font-size:18px;">😅</td><td><span class="jwin">Win: gentle constraint drives completion without frustration</span></td></tr>
+        <tr><td class="jstage">Submit</td><td>Hits Submit All Votes, sees success screen</td><td class="jthink">"Done. I hope they actually use this data."</td><td style="text-align:center; font-size:18px;">😊</td><td><span class="jwin">Win: clean confirmation that vote is recorded</span></td></tr>
+        <tr><td class="jstage">Outcome</td><td>Next month's menu reflects their choices</td><td class="jthink">"Wait, they actually changed it? This thing works."</td><td style="text-align:center; font-size:18px;">🤩</td><td><span class="jwin">Win: closes the loop, drives retention next cycle</span></td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex; gap:12px; margin-top:4px;">
+      <div style="flex:1; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:#34D399; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Biggest win</div><p style="font-size:12.5px; color:var(--text);">One-click Google login and pre-filled draft state means returning voters pick up exactly where they left off. No re-entry friction.</p></div>
+      <div style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.18); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:#F87171; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Biggest pain point</div><p style="font-size:12.5px; color:var(--text);">28 meal slots feels long. 681 draft drop-offs confirm this. Email re-engagement and simplified UX are the next lever.</p></div>
+      <div style="flex:1; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.18); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:var(--amber); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Key retention loop</div><p style="font-size:12.5px; color:var(--text);">Tying voting to the monthly menu cycle creates a built-in re-engagement trigger. Users come back every cycle to see results and vote again.</p></div>
+    </div>
+  </div>
+  <div class="pnum">8 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 9: RESULTS ═══════ -->
+<div class="slide" id="slide-9">
+  <div class="sh"><div class="sn">8</div><h2>Results and Impact</h2><span class="st">Metrics</span></div>
+  <div class="sb two">
+    <div class="col c55">
+      <div class="ssec">Live Numbers</div>
+      <div class="live-box">
+        <div class="ldot"></div>
+        <div><div class="live-n" id="live-user-count">2,220</div><div class="live-l">Registered users · Live from Supabase</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="sbox"><div class="big" id="live-submitted-count">1,385</div><div class="lbl">Submitted Votes</div></div>
+        <div class="sbox"><div class="big" id="live-submitted-rate">62.4%</div><div class="lbl">% of Submitted Votes</div></div>
+        <div class="sbox"><div class="big">3</div><div class="lbl">Messes Active</div></div>
+      </div>
+      <div class="ssec">Survey Approval — 65 respondents</div>
+      <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 18px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <div style="flex:1; height:9px; background:var(--bg3); border-radius:5px; overflow:hidden;"><div style="width:93.8%; height:100%; background:var(--teal); border-radius:5px;"></div></div>
+          <span style="font-size:13px; font-weight:700; color:var(--teal2); width:28px; text-align:right;">61</span>
+          <span style="font-size:11px; color:var(--muted); width:160px;">Yes, very much needed</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="flex:1; height:9px; background:var(--bg3); border-radius:5px; overflow:hidden;"><div style="width:6.2%; height:100%; background:var(--red); border-radius:5px;"></div></div>
+          <span style="font-size:13px; font-weight:700; color:var(--red); width:28px; text-align:right;">4</span>
+          <span style="font-size:11px; color:var(--muted); width:160px;">No, earlier was better</span>
+        </div>
+        <div style="font-size:28px; font-weight:900; color:var(--teal2); margin-top:12px;">93.8% approval</div>
+      </div>
+    </div>
+    <div class="col c45">
+      <div class="ssec">Real-World Impact</div>
+      <div class="card gr"><h3>For students</h3><ul><li>First time students had a structured, recorded voice in menu decisions</li><li>93.8% said the new system was needed</li><li>Menu choices now backed by actual ranked preference data</li></ul></div>
+      <div class="card"><h3>For the mess committee</h3><ul><li>Admin dashboard shows aggregated vote scores per meal per day</li><li>Committee can now justify decisions with real data</li><li>Food wastage reduced by aligning planned menus to demand signals</li></ul></div>
+      <div class="card am"><h3>Zero acquisition cost</h3><p>2,220 users reached with no paid spend. Pure WhatsApp and Student Council email. The problem was real enough that the product spread on its own once the first users voted.</p></div>
+      <div style="background:var(--teal3); border:1px solid rgba(20,184,166,0.2); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:center;">
+        <div style="font-size:28px;">🚀</div>
+        <div><div style="font-size:12px; font-weight:700; color:var(--teal2); margin-bottom:3px;">Next milestone</div><div style="font-size:12.5px; color:var(--text);">Convert 681 drafts via email push notifs. Target: 75%+ submission rate next cycle.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="pnum">9 / 10</div>
+</div>
+
+<!-- ═══════ SLIDE 10: CTA ═══════ -->
+<div class="slide s10" id="slide-10">
+  <h2>Built it. Shipped it. <span>2,220 people use it.</span></h2>
+  <p class="sub">Mess Sphere is one part of a broader PM portfolio spanning shipped products, product cases, and UX work.</p>
+  <div class="cta-links">
+    <a class="cta-btn pr" href="https://nextleap.app/portfolio/ranadip-chakraborty" target="_blank">Product Portfolio</a>
+    <a class="cta-btn ol" href="https://www.linkedin.com/in/ranadipchakraborty" target="_blank">LinkedIn</a>
+    <a class="cta-btn ol" href="mailto:ranadipchakraborty01@gmail.com">Email</a>
+    <a class="cta-btn ol" href="/">Back to Mess Sphere</a>
+  </div>
+  <div class="resume-strip">
+    <div class="ri">📄</div>
+    <div><div class="rn">Ranadip Chakraborty</div><div class="rs">BITS Pilani Goa · NextLeap Top PM Fellow · Aspiring APM</div></div>
+    <a href="/resume.pdf" target="_blank">View Resume</a>
+  </div>
+  <div class="foot">Ranadip Chakraborty · BITS Pilani Goa · Mess Convener · 2026</div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar">
+  <button onclick="go(-1)">← Prev</button>
+  <div class="dot-nav" id="dots"></div>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">Next →</button>
+</div>
+
+<script>
+let cur=1; const total=10;
+const dotsEl=document.getElementById('dots');
+for(let i=1;i<=total;i++){ const d=document.createElement('span'); d.onclick=()=>goTo(i); dotsEl.appendChild(d); }
+function updateDots(){ dotsEl.querySelectorAll('span').forEach((d,i)=>d.className=(i+1===cur)?'ad':''); }
+function goTo(n){ document.getElementById('slide-'+cur).classList.remove('active'); cur=Math.max(1,Math.min(total,n)); document.getElementById('slide-'+cur).classList.add('active'); document.getElementById('counter').textContent=cur+' / '+total; updateDots(); }
+function go(d){ goTo(cur+d); }
+document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1); if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1); });
+updateDots();
+
+// INTERACTIVE VOTING DEMO
+const vs={a:0,b:0};
+const labels={1:'Positive',0:'Neutral','-1':'Negative'};
+const btnMap={a:{1:'a-1',0:'a0','-1':'aneg'},b:{1:'b-1',0:'b0','-1':'bneg'}};
+
+function setVote(menu,val){
+  const other=menu==='a'?'b':'a';
+  if(val===-1 && vs[other]===-1) return; // block cross+cross
+  vs[menu]=val;
+  renderDemo();
+}
+
+function renderDemo(){
+  ['a','b'].forEach(m=>{
+    [-1,0,1].forEach(v=>{
+      const id=btnMap[m][v];
+      const btn=document.getElementById(id);
+      btn.className='vdbtn';
+      if(vs[m]===v){ btn.classList.add(v===1?'sel-pos':v===0?'sel-neu':'sel-neg'); }
+      // block cross if other is crossed
+      const other=m==='a'?'b':'a';
+      if(v===-1 && vs[other]===-1 && vs[m]!==-1) btn.classList.add('blocked');
+    });
+    document.getElementById('val-'+m).textContent=labels[String(vs[m])];
+  });
+  const hasPos=vs.a===1||vs.b===1;
+  const st=document.getElementById('vote-status');
+  st.textContent=hasPos?'Ready to submit this meal!':'Select at least one +1 to enable submit';
+  st.className='vd-status'+(hasPos?' ok':'');
+}
+renderDemo();
+
+// LIVE COUNT
+async function fetchLiveCount(){
+  try{
+    const URL='https://jreodsnkaoftnzeqgdaz.supabase.co';
+    const KEY='sb_publishable_zWE9UVQkhzNzvO4LNu7jrg_I77wa-6w';
+    if(!URL||!KEY) return;
+    const headers={'apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'count=exact','Range':'0-0'};
+    const [usersRes, startedRes, submittedRes]=await Promise.all([
+      fetch(URL+'/rest/v1/users?select=id',{headers}),
+      fetch(URL+'/rest/v1/votes?select=id',{headers}),
+      fetch(URL+'/rest/v1/votes?select=id&status=eq.submitted',{headers}),
+    ]);
+    const readCount=(res)=>{
+      const cr=res.headers.get('content-range');
+      if(!cr) return null;
+      const total=Number(cr.split('/')[1]);
+      return Number.isFinite(total)?total:null;
+    };
+    const registered=readCount(usersRes);
+    const started=readCount(startedRes);
+    const submitted=readCount(submittedRes);
+    if(registered===null||started===null||submitted===null||registered<=0) return;
+
+    const drafts=Math.max(started-submitted,0);
+    const submittedRate=(submitted/registered)*100;
+    const startedRate=(started/registered)*100;
+    const unstartedRate=Math.max(100-startedRate,0);
+    const draftRate=started>0?(drafts/started)*100:0;
+    const fmtNum=(n)=>n.toLocaleString();
+    const fmtPct=(n)=>n.toFixed(1)+'%';
+
+    document.getElementById('live-user-count').textContent=fmtNum(registered);
+    document.getElementById('live-submitted-count').textContent=fmtNum(submitted);
+    document.getElementById('live-submitted-rate').textContent=fmtPct(submittedRate);
+
+    document.getElementById('nsm-percentage').textContent=fmtPct(submittedRate);
+    document.getElementById('nsm-strip-percentage').textContent=fmtPct(submittedRate);
+    document.getElementById('submitted-strip-count').textContent=fmtNum(submitted);
+    document.getElementById('registered-strip-count').textContent=fmtNum(registered);
+
+    document.getElementById('metric-registered').textContent=fmtNum(registered);
+    document.getElementById('metric-submitted').textContent=fmtNum(submitted);
+    document.getElementById('metric-drafts').textContent=fmtNum(drafts);
+    document.getElementById('metric-rate').textContent=fmtPct(submittedRate);
+
+    document.getElementById('funnel-registered').textContent=fmtNum(registered)+' - 100%';
+    document.getElementById('funnel-started').textContent=fmtNum(started)+' - '+fmtPct(startedRate);
+    document.getElementById('funnel-submitted').textContent=fmtNum(submitted)+' - '+fmtPct(submittedRate);
+    document.getElementById('funnel-unstarted').textContent=fmtPct(unstartedRate)+' did not start';
+    document.getElementById('funnel-drafts-rate').textContent=fmtPct(draftRate)+' remained drafts';
+    document.getElementById('funnel-drafts-count').textContent=fmtNum(drafts)+' Drafts - Recovery Target';
+  }catch(e){}
+}
+fetchLiveCount();
+</script>
+</body>
+</html>

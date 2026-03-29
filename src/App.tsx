@@ -10,6 +10,7 @@ import Voting from "./pages/Voting";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Stats from "./pages/Stats";
+import CaseStudy from "@/pages/CaseStudy";
 
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/voting" element={<ProtectedRoute><Voting /></ProtectedRoute>} />
           <Route path="/admin20231011" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
           <Route path="/stats20231011" element={<ProtectedRoute><Stats /></ProtectedRoute>} />
+          <Route path="/casestudy1011" element={<CaseStudy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
