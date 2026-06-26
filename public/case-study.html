@@ -643,7 +643,7 @@ function getSessionToken(){
 
 const SNAPSHOT_REGISTERED = 2220;
 const SNAPSHOT_STARTED = 2069;
-const SNAPSHOT_SUBMITTED = 1385;
+const SNAPSHOT_SUBMITTED = 1520;
 
 function applySnapshotMetrics(registered, started, submitted){
   const drafts=Math.max(started-submitted,0);
@@ -675,39 +675,7 @@ function applySnapshotMetrics(registered, started, submitted){
   document.getElementById('funnel-title-submitted').textContent='Successfully Submitted: '+fmtNum(submitted)+' ('+fmtPct(submittedRate)+') | Drafts: '+fmtNum(drafts)+' ('+fmtPct(draftRate)+' of starters)';
 }
 
-async function fetchLiveCount(){
-  try{
-    const URL='https://jreodsnkaoftnzeqgdaz.supabase.co';
-    const KEY='sb_publishable_zWE9UVQkhzNzvO4LNu7jrg_I77wa-6w';
-    if(!URL||!KEY) return;
-    const token=getSessionToken();
-    const headers={'apikey':KEY,'Authorization':'Bearer '+(token||KEY),'Prefer':'count=exact','Range':'0-0'};
-    const [usersRes, startedRes, submittedRes]=await Promise.all([
-      fetch(URL+'/rest/v1/users?select=id',{headers}),
-      fetch(URL+'/rest/v1/votes?select=id',{headers}),
-      fetch(URL+'/rest/v1/votes?select=id&status=eq.submitted',{headers}),
-    ]);
-    const readCount=(res)=>{
-      const cr=res.headers.get('content-range');
-      if(!cr) return null;
-      const total=Number(cr.split('/')[1]);
-      return Number.isFinite(total)?total:null;
-    };
-    const registered=readCount(usersRes);
-    const started=readCount(startedRes);
-    const submitted=readCount(submittedRes);
-    const saneRegistered =
-      registered !== null && registered >= SNAPSHOT_REGISTERED ? registered : SNAPSHOT_REGISTERED;
-    const saneStarted =
-      started !== null && started >= SNAPSHOT_SUBMITTED && started <= saneRegistered ? started : SNAPSHOT_STARTED;
-    const saneSubmitted =
-      submitted !== null && submitted >= 1000 && submitted <= saneRegistered ? submitted : SNAPSHOT_SUBMITTED;
-
-    applySnapshotMetrics(saneRegistered, saneStarted, saneSubmitted);
-  }catch(e){}
-}
 applySnapshotMetrics(SNAPSHOT_REGISTERED, SNAPSHOT_STARTED, SNAPSHOT_SUBMITTED);
-fetchLiveCount();
 </script>
 </body>
 </html>
