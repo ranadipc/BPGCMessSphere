@@ -221,8 +221,8 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
     <p class="tagline">How I identified a broken system, shipped a product in days, and got 2,220 students to actually use it</p>
     <div class="hs-row">
       <div class="hs"><div class="n">2,220</div><div class="l">Registered Users</div></div>
-      <div class="hs"><div class="n">1,385</div><div class="l">Votes Submitted</div></div>
-      <div class="hs"><div class="n">62.4%</div><div class="l">Completion Rate</div></div>
+      <div class="hs"><div class="n">1,520</div><div class="l">Total Votes Cast</div></div>
+      <div class="hs"><div class="n">68.5%</div><div class="l">Completion Rate</div></div>
       <div class="hs"><div class="n">3</div><div class="l">Mess Canteens</div></div>
     </div>
     <div class="author">Ranadip Chakraborty · BITS Pilani Goa · Mess Convener & Head of QCC · 2026</div>
@@ -310,7 +310,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
       <div class="jtbd-box"><div class="jl">Committee JTBD</div><p>When I <em>plan next month's menu</em>, I want to <em>see ranked student preferences by mess and year</em>, so I can <em>make decisions I can justify and reduce food wastage</em>.</p></div>
       <div class="jtbd-box"><div class="jl">Core Outcome Metric</div><p><em>% of submitted votes</em> out of total registered users per voting cycle. Captures whether students not only showed up but completed the full process.</p></div>
       <div style="background:var(--teal3); border:1px solid rgba(20,184,166,0.2); border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
-        <div><div class="ssec">Core Outcome Metric</div><div style="font-size:30px; font-weight:900; color:white; line-height:1; margin-top:4px;" id="nsm-percentage">62.4%</div><div style="font-size:11px; color:var(--muted); margin-top:2px;">% of Submitted Votes</div></div>
+        <div><div class="ssec">Core Outcome Metric</div><div style="font-size:30px; font-weight:900; color:white; line-height:1; margin-top:4px;" id="nsm-percentage">68.5%</div><div style="font-size:11px; color:var(--muted); margin-top:2px;">% of Submitted Votes</div></div>
         <div style="font-size:36px;">🎯</div>
       </div>
     </div>
@@ -368,7 +368,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
   <div class="sb">
     <div class="nsm-strip">
       <div><div class="nl">Primary Metric</div><div class="nv">% of Submitted Votes</div></div>
-      <div class="nr"><div class="nrn" id="nsm-strip-percentage">62.4%</div><div class="nrs"><span id="submitted-strip-count">1,385</span> submitted / <span id="registered-strip-count">2,220</span> registered this cycle</div></div>
+      <div class="nr"><div class="nrn" id="nsm-strip-percentage">68.5%</div><div class="nrs"><span id="submitted-strip-count">1,520</span> submitted / <span id="registered-strip-count">2,220</span> registered this cycle</div></div>
     </div>
     <table class="rice-table">
       <thead><tr><th>Feature</th><th>Reach</th><th>Impact</th><th>Confidence</th><th>Effort (wks)</th><th>RICE</th><th>Decision</th></tr></thead>
@@ -453,19 +453,19 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 
         <!-- Step 3: 62.4% -->
         <polygon id="funnel-step-submitted" class="funnel-step" points="78,170 382,170 320,244 140,244" fill="#0B9B77" opacity="0.95">
-          <title id="funnel-title-submitted">Successfully Submitted: 1,385 (62.4%)</title>
+          <title id="funnel-title-submitted">Successfully Submitted: 1,520 (68.5%)</title>
         </polygon>
         <text x="230" y="194" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Segoe UI,sans-serif">Successfully Submitted</text>
-        <text id="funnel-submitted" x="230" y="217" text-anchor="middle" fill="rgba(255,255,255,0.82)" font-size="12" font-family="Segoe UI,sans-serif">1,385 - 62.4%</text>
+        <text id="funnel-submitted" x="230" y="217" text-anchor="middle" fill="rgba(255,255,255,0.82)" font-size="12" font-family="Segoe UI,sans-serif">1,520 - 68.5%</text>
       </svg>
     </div>
     <div class="col c45">
       <div class="ssec">Key Metrics</div>
       <div class="mc-grid">
         <div class="mc"><div class="ml">Reach Activated</div><div class="mv" id="metric-registered">2,220</div><div class="ms">Students registered through organic campus distribution</div></div>
-        <div class="mc"><div class="ml">Total Submitted Votes</div><div class="mv" id="metric-submitted">1,385</div><div class="ms">Submitted votes captured in the current cycle</div></div>
-        <div class="mc"><div class="ml">Recoverable Drop-off</div><div class="mv" id="metric-drafts">681</div><div class="ms">Started voting but still sitting in draft state</div></div>
-        <div class="mc"><div class="ml">End-to-End Conversion</div><div class="mv" id="metric-rate">62.4%</div><div class="ms">Submitted votes as a share of registered users</div></div>
+        <div class="mc"><div class="ml">Total Votes Cast</div><div class="mv" id="metric-submitted">1,520</div><div class="ms">Submitted votes captured in the current cycle</div></div>
+        <div class="mc"><div class="ml">Recoverable Drop-off</div><div class="mv" id="metric-drafts">549</div><div class="ms">Started voting but still sitting in draft state</div></div>
+        <div class="mc"><div class="ml">End-to-End Conversion</div><div class="mv" id="metric-rate">68.5%</div><div class="ms">Submitted votes as a share of registered users</div></div>
       </div>
       <div class="card am"><h3>Converting Drafts to Submissions</h3><p>Many users started but did not submit. Next step: email push notifications in the final 48 hours of the voting window, with a direct deep-link back into their saved draft. Target: bring submission rate above 75%.</p></div>
       <div class="card gr"><h3>Acquisition Cost</h3><p>Zero. WhatsApp groups plus Student Council email. The problem was real enough that the product spread on its own once the first wave voted.</p></div>
@@ -492,7 +492,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
     </table>
     <div style="display:flex; gap:12px; margin-top:4px;">
       <div style="flex:1; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:#34D399; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Biggest win</div><p style="font-size:12.5px; color:var(--text);">One-click Google login and pre-filled draft state means returning voters pick up exactly where they left off. No re-entry friction.</p></div>
-      <div style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.18); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:#F87171; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Biggest pain point</div><p style="font-size:12.5px; color:var(--text);">28 meal slots feels long. 681 draft drop-offs confirm this. Email re-engagement and simplified UX are the next lever.</p></div>
+      <div style="flex:1; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.18); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:#F87171; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Biggest pain point</div><p style="font-size:12.5px; color:var(--text);">28 meal slots feels long. 549 draft drop-offs confirm this. Email re-engagement and simplified UX are the next lever.</p></div>
       <div style="flex:1; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.18); border-radius:8px; padding:12px 16px;"><div style="font-size:10px; font-weight:700; color:var(--amber); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Key retention loop</div><p style="font-size:12.5px; color:var(--text);">Tying voting to the monthly menu cycle creates a built-in re-engagement trigger. Users come back every cycle to see results and vote again.</p></div>
     </div>
   </div>
@@ -510,8 +510,8 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
         <div><div class="live-n" id="live-user-count">2,220</div><div class="live-l">Registered users · Latest production snapshot</div></div>
       </div>
       <div class="stat-row">
-        <div class="sbox"><div class="big" id="live-submitted-count">1,385</div><div class="lbl">Submitted Votes</div></div>
-        <div class="sbox"><div class="big" id="live-submitted-rate">62.4%</div><div class="lbl">% of Submitted Votes</div></div>
+        <div class="sbox"><div class="big" id="live-submitted-count">1,520</div><div class="lbl">Total Votes Cast</div></div>
+        <div class="sbox"><div class="big" id="live-submitted-rate">68.5%</div><div class="lbl">% of Submitted Votes</div></div>
         <div class="sbox"><div class="big">3</div><div class="lbl">Messes Active</div></div>
       </div>
       <div class="ssec">Survey Approval — 65 respondents</div>
@@ -536,7 +536,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
       <div class="card am"><h3>Zero acquisition cost</h3><p>2,220 users reached with no paid spend. Pure WhatsApp and Student Council email. The problem was real enough that the product spread on its own once the first users voted.</p></div>
       <div style="background:var(--teal3); border:1px solid rgba(20,184,166,0.2); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:center;">
         <div style="font-size:28px;">🚀</div>
-        <div><div style="font-size:12px; font-weight:700; color:var(--teal2); margin-bottom:3px;">Next milestone</div><div style="font-size:12.5px; color:var(--text);">Convert 681 drafts via email push notifs. Target: 75%+ submission rate next cycle.</div></div>
+        <div><div style="font-size:12px; font-weight:700; color:var(--teal2); margin-bottom:3px;">Next milestone</div><div style="font-size:12.5px; color:var(--text);">Convert 549 drafts via email push notifs. Target: 75%+ submission rate next cycle.</div></div>
       </div>
     </div>
   </div>
