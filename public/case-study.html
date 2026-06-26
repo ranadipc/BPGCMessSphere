@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mess Sphere – PM Case Study | Ranadip Chakraborty</title>
+<title>Mess Sphere – Case Study | Ranadip Chakraborty</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -216,7 +216,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 <!-- ═══════ SLIDE 1 ═══════ -->
 <div class="slide s1 active" id="slide-1">
   <div>
-    <div class="badge">PM Case Study</div>
+    <div class="badge">Case Study</div>
     <h1>Mess<span>Sphere</span></h1>
     <p class="tagline">How I identified a broken system, shipped a product in days, and got 2,220 students to actually use it</p>
     <div class="hs-row">
@@ -308,9 +308,9 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
       <div class="ssec">Jobs To Be Done</div>
       <div class="jtbd-box"><div class="jl">Student JTBD</div><p>When I <em>sit down to eat the same meal for the fourth time this week</em>, I want to <em>vote for what I actually want</em>, so I can <em>feel like my opinion shapes what gets cooked next month</em>.</p></div>
       <div class="jtbd-box"><div class="jl">Committee JTBD</div><p>When I <em>plan next month's menu</em>, I want to <em>see ranked student preferences by mess and year</em>, so I can <em>make decisions I can justify and reduce food wastage</em>.</p></div>
-      <div class="jtbd-box"><div class="jl">North Star Metric</div><p><em>% of submitted votes</em> out of total registered users per voting cycle. Captures whether students not only showed up but completed the full process.</p></div>
+      <div class="jtbd-box"><div class="jl">Core Outcome Metric</div><p><em>% of submitted votes</em> out of total registered users per voting cycle. Captures whether students not only showed up but completed the full process.</p></div>
       <div style="background:var(--teal3); border:1px solid rgba(20,184,166,0.2); border-radius:10px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
-        <div><div class="ssec">North Star Metric</div><div style="font-size:30px; font-weight:900; color:white; line-height:1; margin-top:4px;" id="nsm-percentage">62.4%</div><div style="font-size:11px; color:var(--muted); margin-top:2px;">% of Submitted Votes</div></div>
+        <div><div class="ssec">Core Outcome Metric</div><div style="font-size:30px; font-weight:900; color:white; line-height:1; margin-top:4px;" id="nsm-percentage">62.4%</div><div style="font-size:11px; color:var(--muted); margin-top:2px;">% of Submitted Votes</div></div>
         <div style="font-size:36px;">🎯</div>
       </div>
     </div>
@@ -367,7 +367,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
   <div class="sh"><div class="sn">4</div><h2>What We Built and Why</h2><span class="st">RICE Prioritization</span></div>
   <div class="sb">
     <div class="nsm-strip">
-      <div><div class="nl">North Star Metric</div><div class="nv">% of Submitted Votes</div></div>
+      <div><div class="nl">Primary Metric</div><div class="nv">% of Submitted Votes</div></div>
       <div class="nr"><div class="nrn" id="nsm-strip-percentage">62.4%</div><div class="nrs"><span id="submitted-strip-count">1,385</span> submitted / <span id="registered-strip-count">2,220</span> registered this cycle</div></div>
     </div>
     <table class="rice-table">
@@ -507,7 +507,7 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
       <div class="ssec">Live Numbers</div>
       <div class="live-box">
         <div class="ldot"></div>
-        <div><div class="live-n" id="live-user-count">2,220</div><div class="live-l">Registered users · Live from Supabase</div></div>
+        <div><div class="live-n" id="live-user-count">2,220</div><div class="live-l">Registered users · Latest production snapshot</div></div>
       </div>
       <div class="stat-row">
         <div class="sbox"><div class="big" id="live-submitted-count">1,385</div><div class="lbl">Submitted Votes</div></div>
@@ -546,16 +546,16 @@ body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; background:var
 <!-- ═══════ SLIDE 10: CTA ═══════ -->
 <div class="slide s10" id="slide-10">
   <h2>Built it. Shipped it.<br><span>2,220 people use it.</span></h2>
-  <p class="sub">Mess Sphere is one part of a broader PM portfolio spanning shipped products, product cases, and UX work.</p>
+  <p class="sub">Mess Sphere is one part of a broader portfolio spanning execution, strategy, problem solving, and user-focused work.</p>
   <div class="cta-links">
-    <a class="cta-btn pr" href="https://nextleap.app/portfolio/ranadip-chakraborty" target="_blank">Product Portfolio</a>
+    <a class="cta-btn pr" href="https://nextleap.app/portfolio/ranadip-chakraborty" target="_blank">Portfolio</a>
     <a class="cta-btn ol" href="https://www.linkedin.com/in/ranadipchakraborty" target="_blank">LinkedIn</a>
     <a class="cta-btn ol" href="mailto:ranadipchakraborty01@gmail.com">Email</a>
     <a class="cta-btn ol" href="/">Back to Mess Sphere</a>
   </div>
   <div class="resume-strip">
     <div class="ri">📄</div>
-    <div><div class="rn">Ranadip Chakraborty</div><div class="rs">BITS Pilani Goa · NextLeap Top PM Fellow · Aspiring APM</div></div>
+    <div><div class="rn">Ranadip Chakraborty</div><div class="rs">BITS Pilani Goa · Strategy, Product, and Operations</div></div>
     <a href="/resume.pdf" target="_blank">View Resume</a>
   </div>
 </div>
@@ -641,6 +641,40 @@ function getSessionToken(){
   }
 }
 
+const SNAPSHOT_REGISTERED = 2220;
+const SNAPSHOT_STARTED = 2069;
+const SNAPSHOT_SUBMITTED = 1385;
+
+function applySnapshotMetrics(registered, started, submitted){
+  const drafts=Math.max(started-submitted,0);
+  const submittedRate=(submitted/registered)*100;
+  const startedRate=(started/registered)*100;
+  const draftRate=started>0?(drafts/started)*100:0;
+  const fmtNum=(n)=>n.toLocaleString();
+  const fmtPct=(n)=>n.toFixed(1)+'%';
+
+  document.getElementById('live-user-count').textContent=fmtNum(registered);
+  document.getElementById('live-submitted-count').textContent=fmtNum(submitted);
+  document.getElementById('live-submitted-rate').textContent=fmtPct(submittedRate);
+
+  document.getElementById('nsm-percentage').textContent=fmtPct(submittedRate);
+  document.getElementById('nsm-strip-percentage').textContent=fmtPct(submittedRate);
+  document.getElementById('submitted-strip-count').textContent=fmtNum(submitted);
+  document.getElementById('registered-strip-count').textContent=fmtNum(registered);
+
+  document.getElementById('metric-registered').textContent=fmtNum(registered);
+  document.getElementById('metric-submitted').textContent=fmtNum(submitted);
+  document.getElementById('metric-drafts').textContent=fmtNum(drafts);
+  document.getElementById('metric-rate').textContent=fmtPct(submittedRate);
+
+  document.getElementById('funnel-registered').textContent=fmtNum(registered)+' - 100%';
+  document.getElementById('funnel-started').textContent=fmtNum(started)+' - '+fmtPct(startedRate);
+  document.getElementById('funnel-submitted').textContent=fmtNum(submitted)+' - '+fmtPct(submittedRate);
+  document.getElementById('funnel-title-registered').textContent='Registered Users: '+fmtNum(registered)+' (100%)';
+  document.getElementById('funnel-title-started').textContent='Started Voting: '+fmtNum(started)+' ('+fmtPct(startedRate)+')';
+  document.getElementById('funnel-title-submitted').textContent='Successfully Submitted: '+fmtNum(submitted)+' ('+fmtPct(submittedRate)+') | Drafts: '+fmtNum(drafts)+' ('+fmtPct(draftRate)+' of starters)';
+}
+
 async function fetchLiveCount(){
   try{
     const URL='https://jreodsnkaoftnzeqgdaz.supabase.co';
@@ -662,43 +696,17 @@ async function fetchLiveCount(){
     const registered=readCount(usersRes);
     const started=readCount(startedRes);
     const submitted=readCount(submittedRes);
-    const fallbackRegistered=Number((document.getElementById('live-user-count')?.textContent || '2220').replace(/,/g,'')) || 2220;
-    if(started===null||submitted===null||started<=0||submitted<=0) return;
-
     const saneRegistered =
-      registered !== null && registered >= submitted && registered >= started
-        ? registered
-        : Math.max(fallbackRegistered, started, submitted);
+      registered !== null && registered >= SNAPSHOT_REGISTERED ? registered : SNAPSHOT_REGISTERED;
+    const saneStarted =
+      started !== null && started >= SNAPSHOT_SUBMITTED && started <= saneRegistered ? started : SNAPSHOT_STARTED;
+    const saneSubmitted =
+      submitted !== null && submitted >= 1000 && submitted <= saneRegistered ? submitted : SNAPSHOT_SUBMITTED;
 
-    const drafts=Math.max(started-submitted,0);
-    const submittedRate=(submitted/saneRegistered)*100;
-    const startedRate=(started/saneRegistered)*100;
-    const draftRate=started>0?(drafts/started)*100:0;
-    const fmtNum=(n)=>n.toLocaleString();
-    const fmtPct=(n)=>n.toFixed(1)+'%';
-
-    document.getElementById('live-user-count').textContent=fmtNum(saneRegistered);
-    document.getElementById('live-submitted-count').textContent=fmtNum(submitted);
-    document.getElementById('live-submitted-rate').textContent=fmtPct(submittedRate);
-
-    document.getElementById('nsm-percentage').textContent=fmtPct(submittedRate);
-    document.getElementById('nsm-strip-percentage').textContent=fmtPct(submittedRate);
-    document.getElementById('submitted-strip-count').textContent=fmtNum(submitted);
-    document.getElementById('registered-strip-count').textContent=fmtNum(saneRegistered);
-
-    document.getElementById('metric-registered').textContent=fmtNum(saneRegistered);
-    document.getElementById('metric-submitted').textContent=fmtNum(submitted);
-    document.getElementById('metric-drafts').textContent=fmtNum(drafts);
-    document.getElementById('metric-rate').textContent=fmtPct(submittedRate);
-
-    document.getElementById('funnel-registered').textContent=fmtNum(saneRegistered)+' - 100%';
-    document.getElementById('funnel-started').textContent=fmtNum(started)+' - '+fmtPct(startedRate);
-    document.getElementById('funnel-submitted').textContent=fmtNum(submitted)+' - '+fmtPct(submittedRate);
-    document.getElementById('funnel-title-registered').textContent='Registered Users: '+fmtNum(saneRegistered)+' (100%)';
-    document.getElementById('funnel-title-started').textContent='Started Voting: '+fmtNum(started)+' ('+fmtPct(startedRate)+')';
-    document.getElementById('funnel-title-submitted').textContent='Successfully Submitted: '+fmtNum(submitted)+' ('+fmtPct(submittedRate)+') | Drafts: '+fmtNum(drafts)+' ('+fmtPct(draftRate)+' of starters)';
+    applySnapshotMetrics(saneRegistered, saneStarted, saneSubmitted);
   }catch(e){}
 }
+applySnapshotMetrics(SNAPSHOT_REGISTERED, SNAPSHOT_STARTED, SNAPSHOT_SUBMITTED);
 fetchLiveCount();
 </script>
 </body>
